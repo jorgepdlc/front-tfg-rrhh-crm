@@ -1,0 +1,19 @@
+.header {
+    @apply bg-slate-800 border-b text-primary p-2;
+
+    & > nav {
+        @apply flex justify-between items-center;
+    }
+}
+
+.paths {
+    @apply flex items-center border-gray-200;
+
+    .path {
+        @apply flex rounded-md px-3 py-2 mx-1 font-medium text-gray-300 hover:bg-gray-700 hover:text-white;
+    }
+
+    .activePath {
+        @apply flex rounded-md px-3 py-2 mx-1 font-medium text-gray-300 hover:text-white bg-gray-700;
+    }
+}

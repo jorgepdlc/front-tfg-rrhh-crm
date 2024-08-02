@@ -1,0 +1,89 @@
+{
+    "plugins": [
+        "sonarjs",
+        "@typescript-eslint",
+        "react",
+        "react-hooks",
+        "boundaries",
+        "prettier",
+        "jest-extended"
+    ],
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "plugin:sonarjs/recommended",
+        "plugin:react/recommended",
+        "plugin:react-hooks/recommended",
+        "plugin:boundaries/recommended",
+        "plugin:prettier/recommended",
+        "next",
+        "plugin:storybook/recommended"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "project": "./tsconfig.json"
+    },
+    "rules": {
+        "@next/next/no-head-element": "off",
+        "boundaries/element-types": [
+            2,
+            {
+                "default": "allow",
+                "rules": [
+                    {
+                        "from": ["component"],
+                        "allow": ["page", "globalStyle"],
+                        "message": "Components cannot import pages or global styles"
+                    }
+                ]
+            }
+        ],
+        "@typescript-eslint/no-misused-promises": [
+            2,
+            {
+                "checksVoidReturn": {
+                    "attributes": false
+                }
+            }
+        ],
+        "prettier/prettier": [
+            "error",
+            {
+                "endOfLine": "auto"
+            }
+        ],
+        "@next/next/no-html-link-for-pages": "off",
+        "@typescript-eslint/unbound-method": "off",
+        "@typescript-eslint/no-unused-vars": [
+            "error",
+            { "argsIgnorePattern": "^_|^props$" }
+        ],
+        "@typescript-eslint/require-await": "off",
+        "no-unused-vars": "off"
+    },
+    "settings": {
+        "boundaries/include": ["src/**"],
+        "boundaries/ignore": ["src/**/*.spec.*", "src/**/*.test.*"],
+        "boundaries/elements": [
+            {
+                "type": "component",
+                "pattern": "components/*",
+                "mode": "folder",
+                "capture": ["component"]
+            },
+            {
+                "type": "page",
+                "pattern": "pages/**/*",
+                "mode": "file",
+                "capture": ["route", "elementName"]
+            },
+            {
+                "type": "globalStyle",
+                "pattern": "styles/*",
+                "mode": "file",
+                "capture": ["styleName"]
+            }
+        ]
+    }
+}
