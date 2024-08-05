@@ -44,11 +44,6 @@ export function PositionDetailWidget(props: PositionDetailWidgetProps) {
                 'location'
             ) as HTMLInputElement
         ).value as 'BARCELONA' | 'CANTABRIA' | 'MADRID' | 'SALAMANCA' | 'REMOTE'
-        const publicationDate = (
-            event.currentTarget.elements.namedItem(
-                'publicationDate'
-            ) as HTMLSelectElement
-        ).value
         const positionStatus = (
             event.currentTarget.elements.namedItem(
                 'positionStatus'
@@ -82,7 +77,6 @@ export function PositionDetailWidget(props: PositionDetailWidgetProps) {
                 description: description,
                 yearsExperience: parseInt(yearsExperience),
                 location: location,
-                publicationDate: publicationDate + 'T00:00:00.000Z',
                 positionStatus: positionStatus,
                 employmentType: employmentType,
                 salaryRangeMin: parseInt(salaryRangeMin),
@@ -353,18 +347,14 @@ export function PositionDetailWidget(props: PositionDetailWidgetProps) {
                                 <label>
                                     Publication Date:
                                     <input
-                                        className={`${
-                                            isEditing
-                                                ? styles.activeInput
-                                                : styles.input
-                                        }`}
+                                        className={styles.input}
                                         type="date"
                                         name="publicationDate"
                                         defaultValue={data.publicationDate.slice(
                                             0,
                                             10
                                         )}
-                                        readOnly={!isEditing}
+                                        readOnly={true}
                                     />
                                 </label>
                             </div>

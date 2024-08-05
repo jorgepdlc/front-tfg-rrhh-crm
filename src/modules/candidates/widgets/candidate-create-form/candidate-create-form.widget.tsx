@@ -164,6 +164,7 @@ export function CandidateCreateFormWidget(
                                     Candidate Status:
                                     <select
                                         className={styles.activeInput}
+                                        defaultValue={'UNEMPLOYED'}
                                         name="candidateStatus"
                                         id="candidateStatus"
                                     >
@@ -181,6 +182,7 @@ export function CandidateCreateFormWidget(
                                     Is Axpe:
                                     <select
                                         className={styles.activeInput}
+                                        defaultValue={'false'}
                                         name="isAxpe"
                                         id="isAxpe"
                                     >

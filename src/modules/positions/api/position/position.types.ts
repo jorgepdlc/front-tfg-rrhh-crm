@@ -42,7 +42,6 @@ export type PositionUpdate = {
     description: string
     yearsExperience: number
     location: 'MADRID' | 'BARCELONA' | 'SALAMANCA' | 'CANTABRIA' | 'REMOTE'
-    publicationDate: string
     positionStatus: 'OPEN' | 'CLOSED'
     employmentType: 'FULL_TIME' | 'PART_TIME' | 'CONTRACTOR' | 'TEMPORARY'
     salaryRangeMin: number
