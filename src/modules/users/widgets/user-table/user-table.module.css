@@ -84,7 +84,7 @@
 .filters {
     @apply flex mx-2 mb-2 p-2 bg-white rounded;
 
-    & > button {
+    & button {
         @apply px-3 py-1 mr-2 rounded-full font-semibold border-2 transition-colors;
 
         &.active {

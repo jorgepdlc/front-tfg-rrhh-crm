@@ -5,6 +5,12 @@ import Link from 'next/link'
 import { LoadingSpinner } from '@/common/components/ui/loading-spinner'
 import { IsError } from '@/common/components/ui/is-error'
 import { useRouter } from 'next/navigation'
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@radix-ui/react-dropdown-menu'
 
 export type PositionTableWidgetProps = {}
 
@@ -20,11 +26,43 @@ export interface Position {
     positionStatus: string
 }
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 export function PositionTableWidget(props: PositionTableWidgetProps) {
     const router = useRouter()
-
     const { data, isLoading, isError } = usePositions({ size: 10 })
     const [searchTerm, setSearchTerm] = useState<string>('')
+    const [filtersVisible, setFiltersVisible] = useState<boolean>(false)
+    const [employmentTypeFilters, setEmploymentTypeFilters] = useState<{
+        full_time: boolean
+        part_time: boolean
+        contract: boolean
+        temporary: boolean
+    }>({
+        full_time: false,
+        part_time: false,
+        contract: false,
+        temporary: false,
+    })
+    const [locationFilters, setLocationFilters] = useState<{
+        barcelona: boolean
+        cantabria: boolean
+        madrid: boolean
+        salamanca: boolean
+        remote: boolean
+    }>({
+        barcelona: false,
+        cantabria: false,
+        madrid: false,
+        salamanca: false,
+        remote: false,
+    })
+    const [positionStatusFilters, setPositionStatusFilters] = useState<{
+        open: boolean
+        closed: boolean
+    }>({
+        open: false,
+        closed: false,
+    })
 
     if (isLoading) {
         return <LoadingSpinner />
@@ -38,25 +76,88 @@ export function PositionTableWidget(props: PositionTableWidgetProps) {
         setSearchTerm(event.target.value)
     }
 
-    const filteredPositions = data.data.filter(
-        (position: Position) =>
-            position.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            position.department
-                .toLowerCase()
-                .includes(searchTerm.toLowerCase()) ||
-            position.employmentType
-                .toLowerCase()
-                .includes(searchTerm.toLowerCase()) ||
-            position.jobLevel
-                .toLowerCase()
-                .includes(searchTerm.toLowerCase()) ||
-            position.location
-                .toLowerCase()
-                .includes(searchTerm.toLowerCase()) ||
-            position.positionStatus
-                .toLowerCase()
-                .includes(searchTerm.toLowerCase())
-    )
+    const handleTypeChange = (
+        type: 'full_time' | 'part_time' | 'contract' | 'temporary'
+    ) => {
+        setEmploymentTypeFilters((prevFilters) => ({
+            ...prevFilters,
+            [type]: !prevFilters[type],
+        }))
+    }
+
+    const handleLocationChange = (
+        location: 'barcelona' | 'cantabria' | 'madrid' | 'salamanca' | 'remote'
+    ) => {
+        setLocationFilters((prevFilters) => ({
+            ...prevFilters,
+            [location]: !prevFilters[location],
+        }))
+    }
+
+    const handleStatusChange = (status: 'open' | 'closed') => {
+        setPositionStatusFilters((prevFilters) => ({
+            ...prevFilters,
+            [status]: !prevFilters[status],
+        }))
+    }
+
+    const matchesSearchTerm = (position: Position) => {
+        const searchTermLower = searchTerm.toLowerCase()
+        return (
+            position.name.toLowerCase().includes(searchTermLower) ||
+            position.department.toLowerCase().includes(searchTermLower) ||
+            position.employmentType.toLowerCase().includes(searchTermLower) ||
+            position.jobLevel.toLowerCase().includes(searchTermLower) ||
+            position.location.toLowerCase().includes(searchTermLower) ||
+            position.positionStatus.toLowerCase().includes(searchTermLower)
+        )
+    }
+
+    const matchesTypeFilters = (position: Position) => {
+        const { full_time, part_time, contract, temporary } =
+            employmentTypeFilters
+
+        return (
+            (!full_time && !part_time && !contract && !temporary) ||
+            (full_time && position.employmentType === 'FULL_TIME') ||
+            (part_time && position.employmentType === 'PART_TIME') ||
+            (contract && position.employmentType === 'CONTRACTOR') ||
+            (temporary && position.employmentType === 'TEMPORARY')
+        )
+    }
+
+    const matchesLocationFilters = (position: Position) => {
+        const { barcelona, cantabria, madrid, salamanca, remote } =
+            locationFilters
+
+        return (
+            (!barcelona && !cantabria && !madrid && !salamanca && !remote) ||
+            (barcelona && position.location === 'BARCELONA') ||
+            (cantabria && position.location === 'CANTABRIA') ||
+            (madrid && position.location === 'MADRID') ||
+            (salamanca && position.location === 'SALAMANCA') ||
+            (remote && position.location === 'REMOTE')
+        )
+    }
+
+    const matchesStatusFilters = (position: Position) => {
+        const { open, closed } = positionStatusFilters
+
+        return (
+            (!open && !closed) ||
+            (open && position.positionStatus === 'OPEN') ||
+            (closed && position.positionStatus === 'CLOSED')
+        )
+    }
+
+    const filteredPositions = data.data.filter((position: Position) => {
+        return (
+            matchesSearchTerm(position) &&
+            matchesTypeFilters(position) &&
+            matchesLocationFilters(position) &&
+            matchesStatusFilters(position)
+        )
+    })
 
     return (
         <div data-testid="candidate-table-widget" className={styles.container}>
@@ -92,7 +193,15 @@ export function PositionTableWidget(props: PositionTableWidgetProps) {
                         />
                     </div>
                     <span>
-                        <button type="button" className={styles.filtersButton}>
+                        <button
+                            type="button"
+                            className={`${
+                                !filtersVisible
+                                    ? styles.filtersButton
+                                    : styles.filtersButtonActive
+                            }`}
+                            onClick={() => setFiltersVisible(!filtersVisible)}
+                        >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
@@ -135,6 +244,264 @@ export function PositionTableWidget(props: PositionTableWidgetProps) {
                     </span>
                 </div>
             </div>
+            {filtersVisible && (
+                <div className={styles.filters}>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger
+                            className={`mr-2 ${
+                                employmentTypeFilters.full_time ||
+                                employmentTypeFilters.part_time ||
+                                employmentTypeFilters.contract ||
+                                employmentTypeFilters.temporary
+                                    ? styles.active
+                                    : ''
+                            }`}
+                        >
+                            <button className="flex items-center">
+                                Employment Type
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke-width="1.5"
+                                    stroke="currentColor"
+                                    className="size-4 ml-1"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                                    />
+                                </svg>
+                            </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className={styles.filterContent}>
+                            <DropdownMenuItem className="flex justify-center">
+                                <button
+                                    type="button"
+                                    className={`${styles.filterOption} ${
+                                        employmentTypeFilters.full_time
+                                            ? styles.active
+                                            : ''
+                                    }`}
+                                    onClick={() =>
+                                        handleTypeChange('full_time')
+                                    }
+                                >
+                                    Full-Time
+                                </button>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="flex justify-center">
+                                <button
+                                    type="button"
+                                    className={`${styles.filterOption} ${
+                                        employmentTypeFilters.part_time
+                                            ? styles.active
+                                            : ''
+                                    }`}
+                                    onClick={() =>
+                                        handleTypeChange('part_time')
+                                    }
+                                >
+                                    Part-Time
+                                </button>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="flex justify-center">
+                                <button
+                                    type="button"
+                                    className={`${styles.filterOption} ${
+                                        employmentTypeFilters.contract
+                                            ? styles.active
+                                            : ''
+                                    }`}
+                                    onClick={() => handleTypeChange('contract')}
+                                >
+                                    Contractor
+                                </button>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="flex justify-center">
+                                <button
+                                    type="button"
+                                    className={`${styles.filterOption} ${
+                                        employmentTypeFilters.temporary
+                                            ? styles.active
+                                            : ''
+                                    }`}
+                                    onClick={() =>
+                                        handleTypeChange('temporary')
+                                    }
+                                >
+                                    Temporary
+                                </button>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger
+                            className={`mr-2 ${
+                                locationFilters.barcelona ||
+                                locationFilters.cantabria ||
+                                locationFilters.madrid ||
+                                locationFilters.salamanca ||
+                                locationFilters.remote
+                                    ? styles.active
+                                    : ''
+                            }`}
+                        >
+                            <button className="flex items-center">
+                                Location
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke-width="1.5"
+                                    stroke="currentColor"
+                                    className="size-4 ml-1"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                                    />
+                                </svg>
+                            </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className={styles.filterContent}>
+                            <DropdownMenuItem className="flex justify-center">
+                                <button
+                                    type="button"
+                                    className={`${styles.filterOption} ${
+                                        locationFilters.barcelona
+                                            ? styles.active
+                                            : ''
+                                    }`}
+                                    onClick={() =>
+                                        handleLocationChange('barcelona')
+                                    }
+                                >
+                                    Barcelona
+                                </button>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="flex justify-center">
+                                <button
+                                    type="button"
+                                    className={`${styles.filterOption} ${
+                                        locationFilters.cantabria
+                                            ? styles.active
+                                            : ''
+                                    }`}
+                                    onClick={() =>
+                                        handleLocationChange('cantabria')
+                                    }
+                                >
+                                    Cantabria
+                                </button>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="flex justify-center">
+                                <button
+                                    type="button"
+                                    className={`${styles.filterOption} ${
+                                        locationFilters.madrid
+                                            ? styles.active
+                                            : ''
+                                    }`}
+                                    onClick={() =>
+                                        handleLocationChange('madrid')
+                                    }
+                                >
+                                    Madrid
+                                </button>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="flex justify-center">
+                                <button
+                                    type="button"
+                                    className={`${styles.filterOption} ${
+                                        locationFilters.salamanca
+                                            ? styles.active
+                                            : ''
+                                    }`}
+                                    onClick={() =>
+                                        handleLocationChange('salamanca')
+                                    }
+                                >
+                                    Salamanca
+                                </button>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="flex justify-center">
+                                <button
+                                    type="button"
+                                    className={`${styles.filterOption} ${
+                                        locationFilters.remote
+                                            ? styles.active
+                                            : ''
+                                    }`}
+                                    onClick={() =>
+                                        handleLocationChange('remote')
+                                    }
+                                >
+                                    Remote
+                                </button>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger
+                            className={`mr-2 ${
+                                positionStatusFilters.open ||
+                                positionStatusFilters.closed
+                                    ? styles.active
+                                    : ''
+                            }`}
+                        >
+                            <button className="flex items-center">
+                                Status
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke-width="1.5"
+                                    stroke="currentColor"
+                                    className="size-4 ml-1"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                                    />
+                                </svg>
+                            </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className={styles.filterContent}>
+                            <DropdownMenuItem className="flex justify-center">
+                                <button
+                                    type="button"
+                                    className={`${styles.filterOption} ${
+                                        positionStatusFilters.open
+                                            ? styles.active
+                                            : ''
+                                    }`}
+                                    onClick={() => handleStatusChange('open')}
+                                >
+                                    Open
+                                </button>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="flex justify-center">
+                                <button
+                                    type="button"
+                                    className={`${styles.filterOption} ${
+                                        positionStatusFilters.closed
+                                            ? styles.active
+                                            : ''
+                                    }`}
+                                    onClick={() => handleStatusChange('closed')}
+                                >
+                                    Closed
+                                </button>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+            )}
             <div className={styles.tableView}>
                 <div>
                     <div>

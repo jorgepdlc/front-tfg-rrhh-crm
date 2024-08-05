@@ -76,3 +76,39 @@
         }
     }
 }
+
+.filtersButtonActive {
+    @apply inline-flex items-center rounded-md bg-white border-2 border-indigo-500 px-3 py-2 text-sm font-semibold text-indigo-500 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600;
+}
+
+.filters {
+    @apply flex mx-2 mb-2 p-2 bg-white rounded;
+
+    & > button {
+        @apply px-3 py-1 rounded-full flex items-center font-semibold border-2 transition-colors;
+
+        &.active {
+            @apply bg-white text-violet-700 border-violet-700;
+        }
+
+        &:not(.active) {
+            @apply bg-gray-200;
+        }
+
+        &:hover {
+            @apply bg-white;
+        }
+    }
+}
+
+.filterContent {
+    @apply bg-white rounded-lg shadow-md mt-1 p-1;
+}
+
+.filterOption {
+    @apply px-3 py-1 m-1 bg-gray-200 rounded-full font-semibold border-2 transition-colors;
+}
+
+.active {
+    @apply bg-white text-violet-700 border-violet-700;
+}

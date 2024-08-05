@@ -85,7 +85,7 @@
     @apply flex mx-2 mb-2 p-2 bg-white rounded;
 
     & > button {
-        @apply px-3 py-1 mr-2 rounded-full font-semibold border-2 transition-colors;
+        @apply px-3 py-1 rounded-full flex items-center font-semibold border-2 transition-colors;
 
         &.active {
             @apply bg-white text-violet-700 border-violet-700;
@@ -99,6 +99,14 @@
             @apply bg-white;
         }
     }
+}
+
+.filterContent {
+    @apply bg-white rounded-lg shadow-md mt-1 p-1;
+}
+
+.filterOption {
+    @apply px-3 py-1 m-1 bg-gray-200 rounded-full font-semibold border-2 transition-colors;
 }
 
 .active {
