@@ -70,7 +70,7 @@ export function UserCreateFormWidget(props: UserCreateFormWidgetProps) {
         }
 
         if (!validateEmail(email)) {
-            toast.error('Passwords do not match', {
+            toast.error('Invalid email format', {
                 position: toastPosition,
             })
             return

@@ -78,12 +78,11 @@ export type CandidateGetApiParams = {
 }
 
 export type CandidateCreateApiParams = {
-    newResource: Omit<CandidateUpdate, 'candidateId'>
-    // TODO: Add other params here
+    newResource: Omit<CandidateUpdate, 'id'>
 }
 
 export type CandidateUpdateApiParams = {
-    updatedResource: Omit<CandidateUpdate, 'candidateId'>
+    updatedResource: Omit<CandidateUpdate, 'id'>
     resourceId: CandidateId
 }
 

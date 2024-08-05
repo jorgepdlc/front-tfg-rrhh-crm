@@ -4,6 +4,7 @@ import { CandidateId, useCandidates } from '@/candidates/api/candidate'
 import Link from 'next/link'
 import { LoadingSpinner } from '@/common/components/ui/loading-spinner'
 import { IsError } from '@/common/components/ui/is-error'
+import { useRouter } from 'next/navigation'
 
 export type CandidateTableWidgetProps = {}
 
@@ -19,6 +20,7 @@ export interface Candidate {
 }
 
 export function CandidateTableWidget(props: CandidateTableWidgetProps) {
+    const router = useRouter()
     const { data, isLoading, isError } = useCandidates({ size: 10 })
     const [searchTerm, setSearchTerm] = useState<string>('')
 
@@ -103,7 +105,11 @@ export function CandidateTableWidget(props: CandidateTableWidgetProps) {
                         </button>
                     </span>
                     <span>
-                        <button type="button" className={styles.createButton}>
+                        <button
+                            type="button"
+                            className={styles.createButton}
+                            onClick={() => router.push('/candidates/create')}
+                        >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
