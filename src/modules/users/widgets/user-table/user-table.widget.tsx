@@ -19,6 +19,7 @@ export interface User {
     position: string
     role: string
     startedDate: string
+    finishedDate: string
 }
 
 export function UserTableWidget(props: UserTableWidgetProps) {
@@ -33,6 +34,13 @@ export function UserTableWidget(props: UserTableWidgetProps) {
     }>({
         admin: false,
         user: false,
+    })
+    const [allowedFilters, setAllowedFilters] = useState<{
+        allowed: boolean
+        deleted: boolean
+    }>({
+        allowed: true,
+        deleted: false,
     })
 
     if (isLoading) {
@@ -54,6 +62,13 @@ export function UserTableWidget(props: UserTableWidgetProps) {
         }))
     }
 
+    const handleAllowedFilterChange = (filter: 'allowed' | 'deleted') => {
+        setAllowedFilters((prevFilters) => ({
+            ...prevFilters,
+            [filter]: !prevFilters[filter],
+        }))
+    }
+
     const filteredUsers = data.data.filter((user: User) => {
         const matchesSearchTerm =
             user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -69,7 +84,12 @@ export function UserTableWidget(props: UserTableWidgetProps) {
             (roleFilters.admin && user.role === 'ADMIN') ||
             (roleFilters.user && user.role === 'USER')
 
-        return matchesSearchTerm && matchesRoleFilter
+        const matchesAllowedFilter =
+            (!allowedFilters.allowed && !allowedFilters.deleted) ||
+            (allowedFilters.allowed && user.finishedDate === null) ||
+            (allowedFilters.deleted && user.finishedDate !== null)
+
+        return matchesSearchTerm && matchesRoleFilter && matchesAllowedFilter
     })
 
     return (
@@ -175,6 +195,24 @@ export function UserTableWidget(props: UserTableWidgetProps) {
                         onClick={() => handleFilterChange('user')}
                     >
                         User
+                    </button>
+                    <button
+                        type="button"
+                        className={`${styles.filterButton} ${
+                            allowedFilters.allowed ? styles.active : ''
+                        }`}
+                        onClick={() => handleAllowedFilterChange('allowed')}
+                    >
+                        Allowed Users
+                    </button>
+                    <button
+                        type="button"
+                        className={`${styles.filterButton} ${
+                            allowedFilters.deleted ? styles.active : ''
+                        }`}
+                        onClick={() => handleAllowedFilterChange('deleted')}
+                    >
+                        Deleted Users
                     </button>
                 </div>
             )}

@@ -32,6 +32,7 @@ export type UserPatch = {
     position?: string
     password?: string
     role?: 'ADMIN' | 'USER'
+    finishedDate?: string
 }
 
 export type UserId = string | number
