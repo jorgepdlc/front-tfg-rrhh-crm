@@ -3,7 +3,7 @@ import { PositionId } from '../position'
 import { SkillId } from '../skill'
 
 export type Requirement = {
-    requirementId: RequirementId
+    id: RequirementId
     name: string
     description: string
 }

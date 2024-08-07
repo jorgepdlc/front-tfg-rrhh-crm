@@ -1,0 +1,3 @@
+.gridFormDiv {
+    @apply grid gap-x-4 lg:grid-cols-3 md:grid-cols-2;
+}
