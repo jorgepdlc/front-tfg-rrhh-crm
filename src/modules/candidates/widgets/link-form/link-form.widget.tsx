@@ -27,7 +27,7 @@ export function LinkFormWidget(props: LinkFormWidgetProps) {
 
     return (
         <div data-testid="link-form-widget" className={styles.card}>
-            <label className="col-span-2">
+            <label className="lg:col-span-2">
                 Link:
                 <input
                     className={`${

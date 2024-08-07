@@ -42,7 +42,7 @@ export function TaskFormWidget(props: TaskFormWidgetProps) {
                     readOnly={!props.isEditing}
                 />
             </label>
-            <label className="col-span-2">
+            <label className="lg:col-span-2">
                 Description:
                 <Textarea
                     className={`${

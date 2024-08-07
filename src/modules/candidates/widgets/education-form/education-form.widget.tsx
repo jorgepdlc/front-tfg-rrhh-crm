@@ -66,54 +66,53 @@ export function EducationFormWidget(props: EducationFormWidgetProps) {
     }
 
     return (
-        <div data-testid="education-form-widget" className={styles.card}>
+        <div data-testid="education-form-widget" className={styles.container}>
             <form id="educationForm" onSubmit={submit}>
-                <label>
-                    Degree:
-                    <input
-                        className={`${
-                            props.isEditing ? styles.activeInput : styles.input
-                        }`}
-                        type="text"
-                        name="educationDegree"
-                        defaultValue={data?.degree}
-                        readOnly={!props.isEditing}
-                    />
-                </label>
-                <label>
-                    School:
-                    <input
-                        className={`${
-                            props.isEditing ? styles.activeInput : styles.input
-                        }`}
-                        type="text"
-                        name="educationSchool"
-                        defaultValue={data?.school}
-                        readOnly={!props.isEditing}
-                    />
-                </label>
-                <label>
-                    End Date:
-                    <input
-                        className={`${
-                            props.isEditing ? styles.activeInput : styles.input
-                        }`}
-                        type="date"
-                        name="educationEndDate"
-                        defaultValue={data?.endDate.slice(0, 10)}
-                        readOnly={!props.isEditing}
-                    />
-                </label>
+                <div className={`w-full ${styles.card}`}>
+                    <label>
+                        Degree:
+                        <input
+                            className={`${
+                                props.isEditing
+                                    ? styles.activeInput
+                                    : styles.input
+                            }`}
+                            type="text"
+                            name="educationDegree"
+                            defaultValue={data?.degree}
+                            readOnly={!props.isEditing}
+                        />
+                    </label>
+                    <label>
+                        School:
+                        <input
+                            className={`${
+                                props.isEditing
+                                    ? styles.activeInput
+                                    : styles.input
+                            }`}
+                            type="text"
+                            name="educationSchool"
+                            defaultValue={data?.school}
+                            readOnly={!props.isEditing}
+                        />
+                    </label>
+                    <label>
+                        End Date:
+                        <input
+                            className={`${
+                                props.isEditing
+                                    ? styles.activeInput
+                                    : styles.input
+                            }`}
+                            type="date"
+                            name="educationEndDate"
+                            defaultValue={data?.endDate.slice(0, 10)}
+                            readOnly={!props.isEditing}
+                        />
+                    </label>
+                </div>
             </form>
-            {props.isEditing && (
-                <button
-                    className={styles.button}
-                    type="submit"
-                    form="educationForm"
-                >
-                    Save
-                </button>
-            )}
         </div>
     )
 }

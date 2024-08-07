@@ -5,6 +5,9 @@ import { LoadingSpinner } from '@/common/components/ui/loading-spinner'
 import { IsError } from '@/common/components/ui/is-error'
 import { Textarea } from '@/common/components/ui/textarea'
 import { useRouter } from 'next/navigation'
+import { requirementApi, RequirementId } from '@/positions/api/requirement'
+import { CandidateId } from '@/candidates/api/candidate'
+import { positionCandidateApi } from '@/positions/api/position-candidate'
 
 export type PositionDetailWidgetProps = {
     positionId: PositionId
@@ -99,6 +102,28 @@ export function PositionDetailWidget(props: PositionDetailWidgetProps) {
 
         if (success) {
             router.push('/positions')
+        }
+    }
+
+    const handleDeleteRequirement = async (requirementId: RequirementId) => {
+        const success = await requirementApi.delete({
+            resourceId: requirementId,
+            positionId: props.positionId,
+        })
+
+        if (success) {
+            router.push(`/positions/${props.positionId}`)
+        }
+    }
+
+    const handleDeleteCandidate = async (candidateId: CandidateId) => {
+        const success = await positionCandidateApi.delete({
+            resourceId: candidateId,
+            positionId: props.positionId,
+        })
+
+        if (success) {
+            router.push(`/positions/${props.positionId}`)
         }
     }
 
@@ -426,7 +451,11 @@ export function PositionDetailWidget(props: PositionDetailWidgetProps) {
                                     {req.name}
                                 </div>
                                 <div className="w-10 flex items-center justify-center">
-                                    <button>
+                                    <button
+                                        onClick={() =>
+                                            handleDeleteRequirement(req.id)
+                                        }
+                                    >
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
                                             fill="none"
@@ -497,6 +526,9 @@ export function PositionDetailWidget(props: PositionDetailWidgetProps) {
                                         <button
                                             type="button"
                                             className={styles.removeButton}
+                                            onClick={() =>
+                                                handleDeleteCandidate(c.id)
+                                            }
                                         >
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"

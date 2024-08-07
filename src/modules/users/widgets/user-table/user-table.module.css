@@ -82,10 +82,11 @@
 }
 
 .filters {
-    @apply flex mx-2 mb-2 p-2 bg-white rounded;
+    @apply flex mx-2 mb-2 py-2 pl-2 bg-white rounded overflow-x-auto;
 
     & button {
         @apply px-3 py-1 mr-2 rounded-full font-semibold border-2 transition-colors;
+        white-space: nowrap;
 
         &.active {
             @apply bg-white text-violet-700 border-violet-700;

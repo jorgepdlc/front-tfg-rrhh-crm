@@ -446,7 +446,7 @@ export function PositionTableWidget(props: PositionTableWidgetProps) {
                     </DropdownMenu>
                     <DropdownMenu>
                         <DropdownMenuTrigger
-                            className={`mr-2 ${
+                            className={`${
                                 positionStatusFilters.open ||
                                 positionStatusFilters.closed
                                     ? styles.active

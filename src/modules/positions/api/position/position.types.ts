@@ -1,5 +1,6 @@
 import { CandidateId } from '@/candidates/api/candidate'
 import type { Pagination } from '@/hookey'
+import { RequirementId } from '../requirement'
 
 export type Position = {
     id: PositionId
@@ -18,7 +19,7 @@ export type Position = {
         {
             name: string
             description: string
-            id: number
+            id: RequirementId
         }
     ]
     candidates: [
