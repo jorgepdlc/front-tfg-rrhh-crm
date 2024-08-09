@@ -33,7 +33,7 @@ export function TaskFormWidget(props: TaskFormWidgetProps) {
         })
 
         if (success) {
-            router.push(`/candidates/${props.candidateId}`)
+            router.refresh()
         }
     }
 

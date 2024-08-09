@@ -52,7 +52,7 @@ export function UserDetailFormWidget(props: UserDetailFormWidgetProps) {
 
         if (success) {
             setIsEditing(false)
-            router.push(`/users/${props.userId}`)
+            router.refresh()
         }
     }
 

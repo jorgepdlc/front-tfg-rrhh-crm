@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { IsError } from '@/common/components/ui/is-error'
 import { LoadingSpinner } from '@/common/components/ui/loading-spinner'
 import { ParticipantWidget } from '../participant'
+import { AddParticipantWidget } from '../add-participant'
 
 export type EventDetailFormWidgetProps = {
     eventId: EventsId
@@ -61,7 +62,7 @@ export function EventDetailFormWidget(props: EventDetailFormWidgetProps) {
 
         if (success) {
             setIsEditing(false)
-            router.push(`/events/${props.eventId}`)
+            router.refresh()
         }
     }
 
@@ -288,11 +289,11 @@ export function EventDetailFormWidget(props: EventDetailFormWidgetProps) {
                     </form>
                 </div>
                 <div className={styles.field}>
-                    <div className="flex items-center">
-                        <h1 className="mr-4 mt-3">Candidates</h1>
-                        <button type="button" className={styles.button}>
-                            Add
-                        </button>
+                    <div>
+                        <AddParticipantWidget
+                            eventId={props.eventId}
+                            isEditing={isEditing}
+                        />
                     </div>
                     <ParticipantWidget eventId={props.eventId} />
                 </div>

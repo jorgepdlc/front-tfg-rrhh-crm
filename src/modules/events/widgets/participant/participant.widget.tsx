@@ -24,7 +24,7 @@ export function ParticipantWidget(props: ParticipantWidgetProps) {
         })
 
         if (success) {
-            router.push(`/positions/${props.eventId}`)
+            router.refresh()
         }
     }
 

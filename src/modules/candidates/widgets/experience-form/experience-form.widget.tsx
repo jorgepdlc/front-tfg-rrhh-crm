@@ -31,7 +31,7 @@ export function ExperienceFormWidget(props: ExperienceFormWidgetProps) {
         })
 
         if (success) {
-            router.push(`/candidates/${props.candidateId}`)
+            router.refresh()
         }
     }
 

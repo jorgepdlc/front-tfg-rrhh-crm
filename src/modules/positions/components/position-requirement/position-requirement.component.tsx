@@ -6,20 +6,15 @@ import {
     useRequirements,
 } from '@/positions/api/requirement'
 import { PositionId } from '@/positions/api/position'
-import { useRouter } from 'next/navigation'
 import { LoadingSpinner } from '@/common/components/ui/loading-spinner'
 import { IsError } from '@/common/components/ui/is-error'
 
-export type PositionRequirementWidgetProps = {
+export type PositionRequirementProps = {
     positionId: PositionId
 }
 
-export function PositionRequirementWidget(
-    props: PositionRequirementWidgetProps
-) {
-    const router = useRouter()
-
-    const { data, isLoading, isError } = useRequirements({
+export function PositionRequirement(props: PositionRequirementProps) {
+    const { data, isLoading, isError, refetch } = useRequirements({
         positionId: props.positionId,
         size: 10,
     })
@@ -31,7 +26,11 @@ export function PositionRequirementWidget(
         })
 
         if (success) {
-            router.push(`/positions/${props.positionId}`)
+            try {
+                await refetch()
+            } catch (refetchError) {
+                console.error('Error refetching data:', refetchError)
+            }
         }
     }
 
@@ -44,10 +43,7 @@ export function PositionRequirementWidget(
     }
 
     return (
-        <div
-            data-testid="position-requirement-widget"
-            className={styles.container}
-        >
+        <div data-testid="position-requirement" className={styles.container}>
             <div className={styles.gridFormDiv}>
                 {data.data && data.data.length > 0 ? (
                     data.data.map((req) => (
@@ -68,13 +64,13 @@ export function PositionRequirementWidget(
                                         xmlns="http://www.w3.org/2000/svg"
                                         fill="none"
                                         viewBox="0 0 24 24"
-                                        stroke-width="1.5"
+                                        strokeWidth="1.5"
                                         stroke="currentColor"
                                         className="size-6 text-red-600"
                                     >
                                         <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
                                             d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
                                         />
                                     </svg>

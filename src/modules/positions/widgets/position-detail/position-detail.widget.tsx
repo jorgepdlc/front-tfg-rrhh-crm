@@ -5,8 +5,10 @@ import { LoadingSpinner } from '@/common/components/ui/loading-spinner'
 import { IsError } from '@/common/components/ui/is-error'
 import { Textarea } from '@/common/components/ui/textarea'
 import { useRouter } from 'next/navigation'
-import { PositionRequirementWidget } from '../position-requirement'
-import { PositionCandidateWidget } from '../position-candidate'
+import { AddRequirementWidget } from '../add-requirement'
+import { AddCandidateWidget } from '../add-candidate'
+import { PositionRequirement } from '@/positions/components/position-requirement'
+import { PositionCandidate } from '@/positions/components/position-candidate'
 
 export type PositionDetailWidgetProps = {
     positionId: PositionId
@@ -16,7 +18,7 @@ export function PositionDetailWidget(props: PositionDetailWidgetProps) {
     const router = useRouter()
     const [isEditing, setIsEditing] = useState(false)
 
-    const { data, isError, isLoading } = usePosition({
+    const { data, isError, isLoading, refetch } = usePosition({
         resourceId: props.positionId,
     })
 
@@ -72,25 +74,41 @@ export function PositionDetailWidget(props: PositionDetailWidgetProps) {
             ) as HTMLInputElement
         ).value
 
-        const success = await positionApi.update({
-            updatedResource: {
-                name: name,
-                department: department,
-                description: description,
-                yearsExperience: parseInt(yearsExperience),
-                location: location,
-                positionStatus: positionStatus,
-                employmentType: employmentType,
-                salaryRangeMin: parseInt(salaryRangeMin),
-                salaryRangeMax: parseInt(salaryRangeMax),
-                jobLevel: jobLevel,
-            },
-            resourceId: props.positionId,
-        })
+        try {
+            const success = await positionApi.update({
+                updatedResource: {
+                    name: name,
+                    department: department,
+                    description: description,
+                    yearsExperience: parseInt(yearsExperience),
+                    location: location,
+                    positionStatus: positionStatus,
+                    employmentType: employmentType,
+                    salaryRangeMin: parseInt(salaryRangeMin),
+                    salaryRangeMax: parseInt(salaryRangeMax),
+                    jobLevel: jobLevel,
+                },
+                resourceId: props.positionId,
+            })
 
-        if (success) {
-            setIsEditing(false)
-            router.push(`/positions/${props.positionId}`)
+            if (success) {
+                setIsEditing(false)
+                try {
+                    await refetch()
+                } catch (refetchError) {
+                    console.error('Error refetching data:', refetchError)
+                }
+            }
+        } catch (error) {
+            console.error('Error updating position:', error)
+        }
+    }
+
+    const handleSuccess = async () => {
+        try {
+            await refetch()
+        } catch (refetchError) {
+            console.error('Error refetching data:', refetchError)
         }
     }
 
@@ -411,22 +429,24 @@ export function PositionDetailWidget(props: PositionDetailWidgetProps) {
                     </form>
                 </div>
                 <div className={styles.field}>
-                    <div className="flex items-center">
-                        <h1 className="mr-4 mt-3">Requirements</h1>
-                        <button type="button" className={styles.button}>
-                            Add
-                        </button>
+                    <div>
+                        <AddRequirementWidget
+                            positionId={props.positionId}
+                            isEditing={isEditing}
+                            onSuccess={handleSuccess}
+                        />
                     </div>
-                    <PositionRequirementWidget positionId={props.positionId} />
+                    <PositionRequirement positionId={props.positionId} />
                 </div>
                 <div className={styles.field}>
-                    <div className="flex items-center">
-                        <h1 className="mr-4 mt-3">Candidates</h1>
-                        <button type="button" className={styles.button}>
-                            Add
-                        </button>
+                    <div>
+                        <AddCandidateWidget
+                            positionId={props.positionId}
+                            isEditing={isEditing}
+                            onSuccess={handleSuccess}
+                        />
                     </div>
-                    <PositionCandidateWidget positionId={props.positionId} />
+                    <PositionCandidate positionId={props.positionId} />
                 </div>
             </div>
         </div>

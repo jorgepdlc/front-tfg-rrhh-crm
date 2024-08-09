@@ -1,7 +1,7 @@
 import type { Pagination } from '@/hookey'
 
 export type Skill = {
-    skillId: SkillId
+    id: SkillId
     name: string
     description: string
 }

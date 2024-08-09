@@ -26,7 +26,7 @@ export function CoursesFormWidget(props: CoursesFormWidgetProps) {
         })
 
         if (success) {
-            router.push(`/candidates/${props.candidateId}`)
+            router.refresh()
         }
     }
 

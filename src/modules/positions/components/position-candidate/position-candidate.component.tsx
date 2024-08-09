@@ -10,12 +10,14 @@ import { LoadingSpinner } from '@/common/components/ui/loading-spinner'
 import { CandidateId } from '@/candidates/api/candidate'
 import { useRouter } from 'next/navigation'
 
-export type PositionCandidateWidgetProps = { positionId: PositionId }
+export type PositionCandidateProps = {
+    positionId: PositionId
+}
 
-export function PositionCandidateWidget(props: PositionCandidateWidgetProps) {
+export function PositionCandidate(props: PositionCandidateProps) {
     const router = useRouter()
 
-    const { data, isLoading, isError } = usePositionCandidates({
+    const { data, isLoading, isError, refetch } = usePositionCandidates({
         positionId: props.positionId,
         size: 10,
     })
@@ -27,7 +29,11 @@ export function PositionCandidateWidget(props: PositionCandidateWidgetProps) {
         })
 
         if (success) {
-            router.push(`/positions/${props.positionId}`)
+            try {
+                await refetch()
+            } catch (refetchError) {
+                console.error('Error refetching data:', refetchError)
+            }
         }
     }
 
@@ -40,10 +46,7 @@ export function PositionCandidateWidget(props: PositionCandidateWidgetProps) {
     }
 
     return (
-        <div
-            data-testid="position-candidate-widget"
-            className={styles.container}
-        >
+        <div data-testid="position-candidate" className={styles.container}>
             <div className={styles.gridFormDiv2}>
                 {data.data && data.data.length > 0 ? (
                     data.data.map((c) => (
@@ -67,18 +70,18 @@ export function PositionCandidateWidget(props: PositionCandidateWidgetProps) {
                                             xmlns="http://www.w3.org/2000/svg"
                                             fill="none"
                                             viewBox="0 0 24 24"
-                                            stroke-width="1.5"
+                                            strokeWidth="1.5"
                                             stroke="currentColor"
                                             className="size-4"
                                         >
                                             <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
                                                 d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
                                             />
                                             <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
                                                 d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
                                             />
                                         </svg>
@@ -132,7 +135,7 @@ export function PositionCandidateWidget(props: PositionCandidateWidgetProps) {
                         </div>
                     ))
                 ) : (
-                    <div></div>
+                    <div>No candidates found.</div>
                 )}
             </div>
         </div>

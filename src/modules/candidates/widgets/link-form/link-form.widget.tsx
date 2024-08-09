@@ -25,7 +25,7 @@ export function LinkFormWidget(props: LinkFormWidgetProps) {
         })
 
         if (success) {
-            router.push(`/candidates/${props.candidateId}`)
+            router.refresh()
         }
     }
 

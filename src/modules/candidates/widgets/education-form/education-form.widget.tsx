@@ -29,7 +29,7 @@ export function EducationFormWidget(props: EducationFormWidgetProps) {
         })
 
         if (success) {
-            router.push(`/candidates/${props.candidateId}`)
+            router.refresh()
         }
     }
 

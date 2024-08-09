@@ -1,22 +1,22 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { expect } from '@storybook/jest'
 import { within } from '@storybook/testing-library'
-import { PositionCandidateWidget } from './position-candidate.widget'
+import { AddRequirementWidget } from './add-requirement.widget'
 
-const meta: Meta<typeof PositionCandidateWidget> = {
-    title: 'PositionCandidateWidget',
-    component: PositionCandidateWidget,
+const meta: Meta<typeof AddRequirementWidget> = {
+    title: 'AddRequirementWidget',
+    component: AddRequirementWidget,
     argTypes: {},
 }
 
 export default meta
-type Story = StoryObj<typeof PositionCandidateWidget>
+type Story = StoryObj<typeof AddRequirementWidget>
 
 export const Default: Story = {
     args: {},
     async play({ canvasElement }) {
         const canvas = within(canvasElement)
-        const container = canvas.getByTestId('position-candidate-widget')
+        const container = canvas.getByTestId('add-requirement-widget')
 
         expect(container).toBeTruthy()
     },
