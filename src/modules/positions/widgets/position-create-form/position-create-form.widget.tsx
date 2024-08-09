@@ -4,6 +4,7 @@ import { Textarea } from '@/common/components/ui/textarea'
 import { toast, ToastContainer } from 'react-toastify'
 import { positionApi } from '@/positions/api/position'
 import { useRouter } from 'next/navigation'
+import 'react-toastify/dist/ReactToastify.css'
 
 export type PositionCreateFormWidgetProps = {}
 
@@ -96,7 +97,7 @@ export function PositionCreateFormWidget(props: PositionCreateFormWidgetProps) {
         >
             <div className={styles.formInfo}>
                 <div className={styles.field}>
-                    <h1>Position Information</h1>
+                    <h1>New position information</h1>
                     <form onSubmit={submit} id="positionCreateForm">
                         <div className={styles.gridFormDiv}>
                             <div>

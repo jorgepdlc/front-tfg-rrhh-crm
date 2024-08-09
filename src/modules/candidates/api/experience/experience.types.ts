@@ -2,7 +2,7 @@ import type { Pagination } from '@/hookey'
 import { CandidateId } from '../candidate'
 
 export type Experience = {
-    experienceId: ExperienceId
+    id: ExperienceId
     position: string
     company: string
     startedDate: string
@@ -17,8 +17,8 @@ export type Experience = {
     ]
 }
 
-export type ExperienceUpdate = {
-    experienceId: ExperienceId
+export type ExperienceListItem = {
+    id: ExperienceId
     position: string
     company: string
     startedDate: string
@@ -26,12 +26,20 @@ export type ExperienceUpdate = {
     duration: number
 }
 
+export type ExperienceUpdate = {
+    id: ExperienceId
+    position: string
+    company: string
+    startedDate: string
+    finishedDate: string
+}
+
 export type ExperienceId = string | number
 
 export type ExperienceApiResult = Experience
 
 export type ExperiencePaginatedApiResult = {
-    results: ExperienceUpdate[]
+    data: ExperienceListItem[]
     count: number
 }
 
@@ -45,12 +53,12 @@ export type ExperienceGetApiParams = {
 }
 
 export type ExperienceCreateApiParams = {
-    newResource: Omit<ExperienceUpdate, 'experienceId'>
+    newResource: Omit<ExperienceUpdate, 'id'>
     candidateId: CandidateId
 }
 
 export type ExperienceUpdateApiParams = {
-    updatedResource: Omit<ExperienceUpdate, 'experienceId'>
+    updatedResource: Omit<ExperienceUpdate, 'id'>
     resourceId: ExperienceId
     candidateId: CandidateId
 }

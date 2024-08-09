@@ -43,7 +43,13 @@ function LoggedInUser() {
             <Popover.Trigger asChild className="cursor-pointer">
                 <Avatar.Root>
                     <Avatar.Image src={session?.user?.image ?? undefined} />
-                    <Avatar.Fallback>
+                    <Avatar.Fallback
+                        className={
+                            session?.user?.role === 'ADMIN'
+                                ? 'bg-red-700 text-white font-bold'
+                                : 'bg-indigo-500 text-white font-bold'
+                        }
+                    >
                         {(session?.user?.name ?? '')
                             .split(/\s+/)
                             .map((v) => v[0].toUpperCase())
@@ -61,6 +67,7 @@ function LoggedInUser() {
 function LoggedInMenu() {
     return (
         <Button
+            className="bg-slate-800 hover:bg-slate-600 text-white p-2"
             onClick={() =>
                 signOut({
                     redirect: true,

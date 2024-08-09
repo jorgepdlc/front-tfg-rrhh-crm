@@ -2,7 +2,7 @@ import type { Pagination } from '@/hookey'
 import { CandidateId } from '../candidate'
 
 export type Courses = {
-    coursesId: CoursesId
+    id: CoursesId
     title: string
     institution: string
     endDate: string
@@ -13,7 +13,6 @@ export type CoursesId = string | number
 export type CoursesApiResult = Courses
 
 export type CoursesPaginatedApiResult = {
-    // TODO: Replace with actual list api result
     data: Courses[]
     count: number
 }
@@ -28,12 +27,12 @@ export type CoursesGetApiParams = {
 }
 
 export type CoursesCreateApiParams = {
-    newResource: Omit<Courses, 'coursesId'>
+    newResource: Omit<Courses, 'id'>
     candidateId: CandidateId
 }
 
 export type CoursesUpdateApiParams = {
-    updatedResource: Omit<Courses, 'coursesId'>
+    updatedResource: Omit<Courses, 'id'>
     resourceId: CoursesId
     candidateId: CandidateId
 }

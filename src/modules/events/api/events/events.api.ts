@@ -25,7 +25,6 @@ export const eventsApiProto = (
         const resourceIdParam =
             urlParams.resourceId === undefined ? '' : `/${urlParams.resourceId}`
 
-        // TODO: Customize the endpoint url generation here
         return `${endpointUrl}${resourceIdParam}?${queryParamString}`
     }
 
@@ -76,7 +75,7 @@ export const eventsApiProto = (
         async create(
             this: ApiContext,
             { newResource, ...queryParams }: EventsCreateApiParams
-        ): Promise<EventsId> {
+        ): Promise<boolean> {
             const urlParams: UrlParams = {}
             const url = endpoint(urlParams, queryParams)
             console.debug(
@@ -86,36 +85,18 @@ export const eventsApiProto = (
             )
             const response = await this.client.post(url, newResource)
 
-            // TODO: Add code handle the response if needed
-
-            // TODO: Adapt code to handle the receiving of the resourceId (if any)
-            const locationHeader = response.headers.location as
-                | string
-                | undefined
-
-            if (locationHeader) {
-                const segments = new URL(locationHeader).pathname.split('/')
-                const lastIdx = segments.length - 1
-                const resourceId =
-                    segments[lastIdx] || segments[Math.max(lastIdx - 1, 0)]
-                if (!resourceId)
-                    console.warn(new Error('Invalid location header received'))
-                return resourceId as EventsId
-            }
-
-            console.warn(new Error('No location header received'))
-            return '' as EventsId
+            return response.status >= 200 && response.status < 300
         },
         async update(
             this: ApiContext,
             {
                 updatedResource,
-                // resourceId,
+                resourceId,
                 ...queryParams
             }: EventsUpdateApiParams
         ): Promise<boolean> {
             const urlParams: UrlParams = {
-                // resourceId
+                resourceId,
             }
             const url = endpoint(urlParams, queryParams)
             console.debug(
@@ -124,8 +105,6 @@ export const eventsApiProto = (
                 `on url: ${url}`
             )
             const response = await this.client.put(url, updatedResource)
-
-            // TODO: Add code handle the response if needed
 
             return response.status >= 200 && response.status < 300
         },

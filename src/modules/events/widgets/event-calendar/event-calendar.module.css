@@ -1,3 +1,31 @@
-.container {
-    @apply bg-white m-2 rounded p-4 lg:w-4/6 overflow-auto;
+.calendarField {
+    @apply bg-white mx-2 mb-2 rounded p-4;
+}
+
+.options {
+    @apply sm:flex items-center;
+}
+
+.title {
+    @apply p-2 sm:w-2/6;
+
+    & > p {
+        @apply text-sm font-semibold leading-6 text-indigo-600;
+    }
+
+    & > h3 {
+        @apply font-semibold text-2xl;
+    }
+}
+
+.optionsRight {
+    @apply mt-0 flex p-2 ml-auto sm:w-4/6 justify-end;
+
+    & > span {
+        @apply ml-3;
+    }
+}
+
+.createButton {
+    @apply inline-flex items-center rounded-md border-2 bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500;
 }

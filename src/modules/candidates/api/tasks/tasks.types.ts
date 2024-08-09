@@ -3,7 +3,7 @@ import { CandidateId } from '../candidate'
 import { ExperienceId } from '../experience'
 
 export type Tasks = {
-    tasksId: TasksId
+    id: TasksId
     name: string
     description: string
 }
@@ -13,7 +13,7 @@ export type TasksId = string | number
 export type TasksApiResult = Tasks
 
 export type TasksPaginatedApiResult = {
-    results: Tasks[]
+    data: Tasks[]
     count: number
 }
 
@@ -29,13 +29,13 @@ export type TasksGetApiParams = {
 }
 
 export type TasksCreateApiParams = {
-    newResource: Omit<Tasks, 'tasksId'>
+    newResource: Omit<Tasks, 'id'>
     candidateId: CandidateId
     experienceId: ExperienceId
 }
 
 export type TasksUpdateApiParams = {
-    updatedResource: Omit<Tasks, 'tasksId'>
+    updatedResource: Omit<Tasks, 'id'>
     resourceId: TasksId
     candidateId: CandidateId
     experienceId: ExperienceId

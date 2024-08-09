@@ -75,7 +75,7 @@ export function CandidateTableWidget(props: CandidateTableWidgetProps) {
         }))
     }
 
-    const filteredCandidates = data.data.filter((candidate: Candidate) => {
+    const filteredCandidates = data.data?.filter((candidate: Candidate) => {
         const matchesSearchTerm =
             candidate.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             candidate.lastname
@@ -345,7 +345,7 @@ export function CandidateTableWidget(props: CandidateTableWidgetProps) {
                                     <th scope="col">In Axpe</th>
                                 </tr>
                             </thead>
-                            {filteredCandidates.map((c) => (
+                            {filteredCandidates?.map((c) => (
                                 <tbody key={c.id}>
                                     <tr>
                                         <td className="underline">

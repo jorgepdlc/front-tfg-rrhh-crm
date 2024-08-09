@@ -150,14 +150,15 @@ export function PositionTableWidget(props: PositionTableWidgetProps) {
         )
     }
 
-    const filteredPositions = data.data.filter((position: Position) => {
-        return (
-            matchesSearchTerm(position) &&
-            matchesTypeFilters(position) &&
-            matchesLocationFilters(position) &&
-            matchesStatusFilters(position)
-        )
-    })
+    const filteredPositions =
+        data.data?.filter((position: Position) => {
+            return (
+                matchesSearchTerm(position) &&
+                matchesTypeFilters(position) &&
+                matchesLocationFilters(position) &&
+                matchesStatusFilters(position)
+            )
+        }) || []
 
     return (
         <div data-testid="candidate-table-widget" className={styles.container}>
@@ -517,7 +518,7 @@ export function PositionTableWidget(props: PositionTableWidgetProps) {
                                     <th>Status</th>
                                 </tr>
                             </thead>
-                            {filteredPositions.map((p) => (
+                            {filteredPositions?.map((p) => (
                                 <tbody key={p.id}>
                                     <tr>
                                         <td className="underline">

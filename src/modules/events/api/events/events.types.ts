@@ -23,43 +23,40 @@ export type Events = {
     ]
 }
 
-// TODO: Set the id type
-export type EventsId = string | number
-
-export type EventsApiResult = {
-    // TODO: Replace with actual get api result
-    results: Events
+export type EventsUpdate = {
+    id: EventsId
+    title: string
+    startDate: string
+    endDate: string
+    type: 'INTERVIEW' | 'MEETING' | 'OTHER'
+    description: string
+    link: string
 }
 
+export type EventsId = string | number
+
+export type EventsApiResult = Events
+
 export type EventsPaginatedApiResult = {
-    // TODO: Replace with actual list api result
-    results: Events[]
+    data: Events[]
     count: number
 }
 
-export type EventsListApiParams = Pagination.UsePaginatedQueryParams<{
-    // TODO: Add other params here
-}>
+export type EventsListApiParams = Pagination.UsePaginatedQueryParams<{}>
 
 export type EventsGetApiParams = {
     resourceId: EventsId
-    // TODO: Add other params here
 }
 
 export type EventsCreateApiParams = {
-    newResource: Omit<Events, 'eventsId'>
-    // TODO: Add other params here
+    newResource: Omit<EventsUpdate, 'id'>
 }
 
 export type EventsUpdateApiParams = {
-    updatedResource: Events
-    // TODO: Switch params if the api requires an id in the url for updates
-    // updatedResource: Omit<Events, 'eventsId'>
-    // resourceId: EventsId
-    // TODO: Add other params here
+    updatedResource: Omit<EventsUpdate, 'id'>
+    resourceId: EventsId
 }
 
 export type EventsDeleteApiParams = {
     resourceId: EventsId
-    // TODO: Add other params here
 }

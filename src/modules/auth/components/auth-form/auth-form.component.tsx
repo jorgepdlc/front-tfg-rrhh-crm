@@ -59,7 +59,11 @@ export function AuthForm({ className, onSubmit, ...props }: AuthFormProps) {
                         render={({ field }) => (
                             <Form.Item>
                                 <Form.Label>Username</Form.Label>
-                                <Form.Input placeholder="JPrietoC" {...field} />
+                                <Form.Input
+                                    placeholder="JPrietoC"
+                                    className="bg-slate-800 text-white"
+                                    {...field}
+                                />
                                 <Form.Message />
                             </Form.Item>
                         )}
@@ -72,6 +76,7 @@ export function AuthForm({ className, onSubmit, ...props }: AuthFormProps) {
                                 <Form.Label>Password</Form.Label>
                                 <Form.Input
                                     placeholder="********"
+                                    className="bg-slate-800 text-white"
                                     type="password"
                                     {...field}
                                 />

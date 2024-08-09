@@ -69,7 +69,7 @@ export function UserTableWidget(props: UserTableWidgetProps) {
         }))
     }
 
-    const filteredUsers = data.data.filter((user: User) => {
+    const filteredUsers = data.data?.filter((user: User) => {
         const matchesSearchTerm =
             user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             user.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -233,7 +233,7 @@ export function UserTableWidget(props: UserTableWidgetProps) {
                                 </tr>
                             </thead>
                             <tbody>
-                                {filteredUsers.map((user: User) => (
+                                {filteredUsers?.map((user: User) => (
                                     <tr key={user.id}>
                                         <td>
                                             <Link href={`/users/${user.id}`}>

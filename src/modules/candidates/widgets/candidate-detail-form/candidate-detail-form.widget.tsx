@@ -10,15 +10,14 @@ import { LoadingSpinner } from '@/common/components/ui/loading-spinner'
 import { IsError } from '@/common/components/ui/is-error'
 import { EducationFormWidget } from '../education-form'
 import { CoursesFormWidget } from '../courses-form'
-import { TaskFormWidget } from '../task-form'
 import { ExperienceFormWidget } from '../experience-form'
 import { LinkFormWidget } from '../link-form'
 import { useRouter } from 'next/navigation'
-import { educationApi, EducationId } from '@/candidates/api/education'
-import { coursesApi, CoursesId } from '@/candidates/api/courses'
-import { experienceApi, ExperienceId } from '@/candidates/api/experience'
-import { tasksApi, TasksId } from '@/candidates/api/tasks'
-import { linksApi, LinksId } from '@/candidates/api/links'
+import { CurriculumVitaeWidget } from '../curriculum-vitae'
+import { AddEducationWidget } from '../add-education'
+import { AddCourseWidget } from '../add-course'
+import { AddExperienceWidget } from '../add-experience'
+import { AddLinkWidget } from '../add-link'
 
 export type CandidateDetailFormWidgetProps = {
     candidateId: CandidateId
@@ -99,65 +98,6 @@ export function CandidateDetailFormWidget(
 
         if (success) {
             router.push('/candidates')
-        }
-    }
-
-    const handleDeleteEducation = async (educationId: EducationId) => {
-        const success = await educationApi.delete({
-            resourceId: educationId,
-            candidateId: props.candidateId,
-        })
-
-        if (success) {
-            router.push(`/candidates/${props.candidateId}`)
-        }
-    }
-
-    const handleDeleteCourse = async (courseId: CoursesId) => {
-        const success = await coursesApi.delete({
-            resourceId: courseId,
-            candidateId: props.candidateId,
-        })
-
-        if (success) {
-            router.push(`/candidates/${props.candidateId}`)
-        }
-    }
-
-    const handleDeleteExperience = async (experienceId: ExperienceId) => {
-        const success = await experienceApi.delete({
-            resourceId: experienceId,
-            candidateId: props.candidateId,
-        })
-
-        if (success) {
-            router.push(`/candidates/${props.candidateId}`)
-        }
-    }
-
-    const handleDeleteTask = async (
-        taskId: TasksId,
-        experienceId: ExperienceId
-    ) => {
-        const success = await tasksApi.delete({
-            resourceId: taskId,
-            candidateId: props.candidateId,
-            experienceId: experienceId,
-        })
-
-        if (success) {
-            router.push(`/candidates/${props.candidateId}`)
-        }
-    }
-
-    const handleDeleteLink = async (linkId: LinksId) => {
-        const success = await linksApi.delete({
-            resourceId: linkId,
-            candidateId: props.candidateId,
-        })
-
-        if (success) {
-            router.push(`/candidates/${props.candidateId}`)
         }
     }
 
@@ -337,7 +277,7 @@ export function CandidateDetailFormWidget(
                                     />
                                 </label>
                             </div>
-                            <div className="lg:col-span-2">
+                            <div className="md:col-span-2">
                                 <label id="candidateEmail">
                                     Email:
                                     <input
@@ -402,236 +342,65 @@ export function CandidateDetailFormWidget(
                         </div>
                     </form>
                     <div className="flex justify-center">
-                        <button
-                            className={`${
-                                isEditing
-                                    ? styles.buttonDisabled
-                                    : styles.button
-                            }`}
-                            type="button"
-                            disabled={isEditing}
-                        >
-                            Download CV - {data.name} {data.lastname}
-                        </button>
+                        <CurriculumVitaeWidget isEditing={isEditing} />
                     </div>
                 </div>
                 <div className={styles.field}>
                     <div className="flex items-center">
                         <h1 className="mr-4 mt-3">Education</h1>
-                        <button type="button" className={styles.button}>
-                            Add
-                        </button>
+                        <AddEducationWidget
+                            isEditing={isEditing}
+                            candidateId={props.candidateId}
+                        />
                     </div>
-                    <div>
-                        {data.education.map((edu) => (
-                            <div key={edu.id} className="pl-4">
-                                <div className="flex items-center">
-                                    <h3 className="mr-4 mt-2">
-                                        &gt; {edu.degree} -{' '}
-                                        {edu.endDate.slice(0, 4)}
-                                    </h3>
-                                    <button
-                                        type="button"
-                                        className={styles.deleteButton}
-                                        onClick={() =>
-                                            handleDeleteEducation(edu.id)
-                                        }
-                                    >
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            stroke-width="1.5"
-                                            stroke="currentColor"
-                                            className="size-4"
-                                        >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-                                            />
-                                        </svg>
-                                    </button>
-                                </div>
-                                <EducationFormWidget
-                                    educationId={edu.id}
-                                    candidateId={props.candidateId}
-                                    isEditing={isEditing}
-                                />
-                            </div>
-                        ))}
-                    </div>
+                    <EducationFormWidget
+                        candidateId={props.candidateId}
+                        isEditing={isEditing}
+                    />
                 </div>
                 <div className={styles.field}>
                     <div className="flex items-center">
                         <h1 className="mr-4 mt-3">Courses</h1>
-                        <button type="button" className={styles.button}>
-                            Add
-                        </button>
+                        <AddCourseWidget
+                            isEditing={isEditing}
+                            candidateId={props.candidateId}
+                        />
                     </div>
                     <div className="mt-4">
-                        {data.courses.map((cou) => (
-                            <div key={cou.id} className="pl-4">
-                                <div className="flex items-center">
-                                    <h3 className="mr-4 mt-2">
-                                        &gt; {cou.title} -{' '}
-                                        {cou.endDate.slice(0, 4)}
-                                    </h3>
-                                    <button
-                                        type="button"
-                                        className={styles.deleteButton}
-                                        onClick={() =>
-                                            handleDeleteCourse(cou.id)
-                                        }
-                                    >
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            stroke-width="1.5"
-                                            stroke="currentColor"
-                                            className="size-4"
-                                        >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-                                            />
-                                        </svg>
-                                    </button>
-                                </div>
-                                <CoursesFormWidget
-                                    courseId={cou.id}
-                                    candidateId={props.candidateId}
-                                    isEditing={isEditing}
-                                />
-                            </div>
-                        ))}
+                        <CoursesFormWidget
+                            candidateId={props.candidateId}
+                            isEditing={isEditing}
+                        />
                     </div>
                 </div>
                 <div className={styles.field}>
-                    <h1>Experience</h1>
+                    <div className="flex items-center">
+                        <h1 className="mr-4 mt-3">Experience</h1>
+                        <AddExperienceWidget
+                            candidateId={props.candidateId}
+                            isEditing={isEditing}
+                        />
+                    </div>
                     <div className="mt-4">
-                        {data.experience.map((exp) => (
-                            <div key={exp.id} className="pl-4">
-                                <div className="flex items-center">
-                                    <h3 className="mr-4 mt-2">
-                                        &gt; {exp.position} - {exp.company}
-                                    </h3>
-                                    <button
-                                        type="button"
-                                        className={styles.deleteButton}
-                                        onClick={() =>
-                                            handleDeleteExperience(exp.id)
-                                        }
-                                    >
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            stroke-width="1.5"
-                                            stroke="currentColor"
-                                            className="size-4"
-                                        >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-                                            />
-                                        </svg>
-                                    </button>
-                                </div>
-                                <ExperienceFormWidget
-                                    experienceId={exp.id}
-                                    candidateId={props.candidateId}
-                                    isEditing={isEditing}
-                                />
-                                <div className="col-span-3 pl-2 border-l-2 border-indigo-100">
-                                    <h3>&gt;&gt; Tasks</h3>
-                                    {exp.tasks.map((task) => (
-                                        <div key={task.id}>
-                                            <div className="flex items-center">
-                                                <h2 className="mr-4 mt-2">
-                                                    {task.name}
-                                                </h2>
-                                                <button
-                                                    type="button"
-                                                    className={
-                                                        styles.deleteButton
-                                                    }
-                                                    onClick={() =>
-                                                        handleDeleteTask(
-                                                            task.id,
-                                                            exp.id
-                                                        )
-                                                    }
-                                                >
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        fill="none"
-                                                        viewBox="0 0 24 24"
-                                                        stroke-width="1.5"
-                                                        stroke="currentColor"
-                                                        className="size-4"
-                                                    >
-                                                        <path
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
-                                                            d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-                                                        />
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                            <TaskFormWidget
-                                                candidateId={props.candidateId}
-                                                experienceId={exp.id}
-                                                taskId={task.id}
-                                                isEditing={isEditing}
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        ))}
+                        <ExperienceFormWidget
+                            candidateId={props.candidateId}
+                            isEditing={isEditing}
+                        />
                     </div>
                 </div>
                 <div className={styles.field}>
-                    <h1>Links</h1>
+                    <div className="flex items-center">
+                        <h1 className="mr-4 mt-3">Links</h1>
+                        <AddLinkWidget
+                            candidateId={props.candidateId}
+                            isEditing={isEditing}
+                        />
+                    </div>
                     <div className="mt-4">
-                        {data.links.map((lin) => (
-                            <div key={lin.id} className="pl-4">
-                                <div className="flex items-center">
-                                    <h3 className="mr-4 mt-2">
-                                        &gt; {lin.description}
-                                    </h3>
-                                    <button
-                                        type="button"
-                                        className={styles.deleteButton}
-                                        onClick={() => handleDeleteLink(lin.id)}
-                                    >
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            stroke-width="1.5"
-                                            stroke="currentColor"
-                                            className="size-4"
-                                        >
-                                            <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
-                                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-                                            />
-                                        </svg>
-                                    </button>
-                                </div>
-                                <LinkFormWidget
-                                    linkId={lin.id}
-                                    candidateId={props.candidateId}
-                                    isEditing={isEditing}
-                                />
-                            </div>
-                        ))}
+                        <LinkFormWidget
+                            candidateId={props.candidateId}
+                            isEditing={isEditing}
+                        />
                     </div>
                 </div>
                 <div className="flex justify-end mb-2">
