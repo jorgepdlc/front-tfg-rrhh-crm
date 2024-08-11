@@ -90,7 +90,7 @@ export const experienceApiProto = (
                 candidateId,
                 ...queryParams
             }: ExperienceCreateApiParams
-        ): Promise<ExperienceId> {
+        ): Promise<boolean> {
             const urlParams: UrlParams = { candidateId }
             const url = endpoint(urlParams, queryParams)
             console.debug(
@@ -100,25 +100,7 @@ export const experienceApiProto = (
             )
             const response = await this.client.post(url, newResource)
 
-            // TODO: Add code handle the response if needed
-
-            // TODO: Adapt code to handle the receiving of the resourceId (if any)
-            const locationHeader = response.headers.location as
-                | string
-                | undefined
-
-            if (locationHeader) {
-                const segments = new URL(locationHeader).pathname.split('/')
-                const lastIdx = segments.length - 1
-                const resourceId =
-                    segments[lastIdx] || segments[Math.max(lastIdx - 1, 0)]
-                if (!resourceId)
-                    console.warn(new Error('Invalid location header received'))
-                return resourceId as ExperienceId
-            }
-
-            console.warn(new Error('No location header received'))
-            return '' as ExperienceId
+            return response.status >= 200 && response.status < 300
         },
         async update(
             this: ApiContext,

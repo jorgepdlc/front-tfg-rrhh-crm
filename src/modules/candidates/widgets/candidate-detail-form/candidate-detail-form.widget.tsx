@@ -8,10 +8,6 @@ import {
 } from '@/candidates/api/candidate'
 import { LoadingSpinner } from '@/common/components/ui/loading-spinner'
 import { IsError } from '@/common/components/ui/is-error'
-import { EducationFormWidget } from '../education-form'
-import { CoursesFormWidget } from '../courses-form'
-import { ExperienceFormWidget } from '../experience-form'
-import { LinkFormWidget } from '../link-form'
 import { useRouter } from 'next/navigation'
 import { CurriculumVitaeWidget } from '../curriculum-vitae'
 import { AddEducationWidget } from '../add-education'
@@ -29,7 +25,7 @@ export function CandidateDetailFormWidget(
     const router = useRouter()
     const [isEditing, setIsEditing] = useState(false)
 
-    const { data, isError, isLoading } = useCandidate({
+    const { data, isError, isLoading, refetch } = useCandidate({
         resourceId: props.candidateId,
     })
 
@@ -87,8 +83,16 @@ export function CandidateDetailFormWidget(
 
         if (success) {
             setIsEditing(false)
-            router.push(`/candidates/${props.candidateId}`)
+            try {
+                await refetch()
+            } catch (error) {
+                console.error('Error updating candidate', error)
+            }
         }
+    }
+
+    const handleSuccess = async () => {
+        await refetch()
     }
 
     const handleDeleteButton = async () => {
@@ -346,62 +350,32 @@ export function CandidateDetailFormWidget(
                     </div>
                 </div>
                 <div className={styles.field}>
-                    <div className="flex items-center">
-                        <h1 className="mr-4 mt-3">Education</h1>
-                        <AddEducationWidget
-                            isEditing={isEditing}
-                            candidateId={props.candidateId}
-                        />
-                    </div>
-                    <EducationFormWidget
-                        candidateId={props.candidateId}
+                    <AddEducationWidget
                         isEditing={isEditing}
+                        candidateId={props.candidateId}
+                        onSuccess={handleSuccess}
                     />
                 </div>
                 <div className={styles.field}>
-                    <div className="flex items-center">
-                        <h1 className="mr-4 mt-3">Courses</h1>
-                        <AddCourseWidget
-                            isEditing={isEditing}
-                            candidateId={props.candidateId}
-                        />
-                    </div>
-                    <div className="mt-4">
-                        <CoursesFormWidget
-                            candidateId={props.candidateId}
-                            isEditing={isEditing}
-                        />
-                    </div>
+                    <AddCourseWidget
+                        isEditing={isEditing}
+                        candidateId={props.candidateId}
+                        onSuccess={handleSuccess}
+                    />
                 </div>
                 <div className={styles.field}>
-                    <div className="flex items-center">
-                        <h1 className="mr-4 mt-3">Experience</h1>
-                        <AddExperienceWidget
-                            candidateId={props.candidateId}
-                            isEditing={isEditing}
-                        />
-                    </div>
-                    <div className="mt-4">
-                        <ExperienceFormWidget
-                            candidateId={props.candidateId}
-                            isEditing={isEditing}
-                        />
-                    </div>
+                    <AddExperienceWidget
+                        candidateId={props.candidateId}
+                        isEditing={isEditing}
+                        onSuccess={handleSuccess}
+                    />
                 </div>
                 <div className={styles.field}>
-                    <div className="flex items-center">
-                        <h1 className="mr-4 mt-3">Links</h1>
-                        <AddLinkWidget
-                            candidateId={props.candidateId}
-                            isEditing={isEditing}
-                        />
-                    </div>
-                    <div className="mt-4">
-                        <LinkFormWidget
-                            candidateId={props.candidateId}
-                            isEditing={isEditing}
-                        />
-                    </div>
+                    <AddLinkWidget
+                        candidateId={props.candidateId}
+                        isEditing={isEditing}
+                        onSuccess={handleSuccess}
+                    />
                 </div>
                 <div className="flex justify-end mb-2">
                     {isEditing && (

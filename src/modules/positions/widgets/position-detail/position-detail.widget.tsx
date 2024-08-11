@@ -7,8 +7,6 @@ import { Textarea } from '@/common/components/ui/textarea'
 import { useRouter } from 'next/navigation'
 import { AddRequirementWidget } from '../add-requirement'
 import { AddCandidateWidget } from '../add-candidate'
-import { PositionRequirement } from '@/positions/components/position-requirement'
-import { PositionCandidate } from '@/positions/components/position-candidate'
 
 export type PositionDetailWidgetProps = {
     positionId: PositionId
@@ -105,11 +103,7 @@ export function PositionDetailWidget(props: PositionDetailWidgetProps) {
     }
 
     const handleSuccess = async () => {
-        try {
-            await refetch()
-        } catch (refetchError) {
-            console.error('Error refetching data:', refetchError)
-        }
+        await refetch()
     }
 
     const handleDeleteButton = async () => {
@@ -429,14 +423,11 @@ export function PositionDetailWidget(props: PositionDetailWidgetProps) {
                     </form>
                 </div>
                 <div className={styles.field}>
-                    <div>
-                        <AddRequirementWidget
-                            positionId={props.positionId}
-                            isEditing={isEditing}
-                            onSuccess={handleSuccess}
-                        />
-                    </div>
-                    <PositionRequirement positionId={props.positionId} />
+                    <AddRequirementWidget
+                        positionId={props.positionId}
+                        isEditing={isEditing}
+                        onSuccess={handleSuccess}
+                    />
                 </div>
                 <div className={styles.field}>
                     <div>
@@ -446,7 +437,6 @@ export function PositionDetailWidget(props: PositionDetailWidgetProps) {
                             onSuccess={handleSuccess}
                         />
                     </div>
-                    <PositionCandidate positionId={props.positionId} />
                 </div>
             </div>
         </div>

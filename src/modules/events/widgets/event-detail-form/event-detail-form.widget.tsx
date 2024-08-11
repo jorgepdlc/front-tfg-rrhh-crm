@@ -5,7 +5,6 @@ import { eventsApi, EventsId, useEvents } from '@/events/api/events'
 import { useRouter } from 'next/navigation'
 import { IsError } from '@/common/components/ui/is-error'
 import { LoadingSpinner } from '@/common/components/ui/loading-spinner'
-import { ParticipantWidget } from '../participant'
 import { AddParticipantWidget } from '../add-participant'
 
 export type EventDetailFormWidgetProps = {
@@ -16,7 +15,7 @@ export function EventDetailFormWidget(props: EventDetailFormWidgetProps) {
     const router = useRouter()
     const [isEditing, setIsEditing] = useState(false)
 
-    const { data, isLoading, isError } = useEvents({
+    const { data, isLoading, isError, refetch } = useEvents({
         resourceId: props.eventId,
     })
 
@@ -62,7 +61,11 @@ export function EventDetailFormWidget(props: EventDetailFormWidgetProps) {
 
         if (success) {
             setIsEditing(false)
-            router.refresh()
+            try {
+                await refetch()
+            } catch (error) {
+                console.error('Error updating event', error)
+            }
         }
     }
 
@@ -289,13 +292,10 @@ export function EventDetailFormWidget(props: EventDetailFormWidgetProps) {
                     </form>
                 </div>
                 <div className={styles.field}>
-                    <div>
-                        <AddParticipantWidget
-                            eventId={props.eventId}
-                            isEditing={isEditing}
-                        />
-                    </div>
-                    <ParticipantWidget eventId={props.eventId} />
+                    <AddParticipantWidget
+                        eventId={props.eventId}
+                        isEditing={isEditing}
+                    />
                 </div>
             </div>
         </div>

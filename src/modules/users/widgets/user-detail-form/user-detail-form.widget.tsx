@@ -12,7 +12,7 @@ export function UserDetailFormWidget(props: UserDetailFormWidgetProps) {
     const router = useRouter()
     const [isEditing, setIsEditing] = useState(false)
 
-    const { data, isError, isLoading } = useUser({
+    const { data, isError, isLoading, refetch } = useUser({
         resourceId: props.userId,
     })
 
@@ -52,7 +52,11 @@ export function UserDetailFormWidget(props: UserDetailFormWidgetProps) {
 
         if (success) {
             setIsEditing(false)
-            router.refresh()
+            try {
+                await refetch()
+            } catch (error) {
+                console.error('Error refetching user', error)
+            }
         }
     }
 
