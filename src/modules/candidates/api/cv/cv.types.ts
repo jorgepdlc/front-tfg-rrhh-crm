@@ -1,46 +1,23 @@
-import type { Pagination } from '@/hookey'
+import { CandidateId } from '../candidate'
 
 export type Cv = {
-    cvId: CvId
+    id: CvId
+    file: File
 }
 
-// TODO: Set the id type
 export type CvId = string | number
 
-export type CvApiResult = {
-    // TODO: Replace with actual get api result
-    results: Cv
-}
-
-export type CvPaginatedApiResult = {
-    // TODO: Replace with actual list api result
-    results: Cv[]
-    count: number
-}
-
-export type CvListApiParams = Pagination.UsePaginatedQueryParams<{
-    // TODO: Add other params here
-}>
+export type CvApiResult = Omit<Cv, 'id'>
 
 export type CvGetApiParams = {
-    resourceId: CvId
-    // TODO: Add other params here
+    candidateId: CandidateId
 }
 
 export type CvCreateApiParams = {
-    newResource: Omit<Cv, 'cvId'>
-    // TODO: Add other params here
-}
-
-export type CvUpdateApiParams = {
-    updatedResource: Cv
-    // TODO: Switch params if the api requires an id in the url for updates
-    // updatedResource: Omit<Cv, 'cvId'>
-    // resourceId: CvId
-    // TODO: Add other params here
+    newResource: Omit<Cv, 'id'>
+    candidateId: CandidateId
 }
 
 export type CvDeleteApiParams = {
-    resourceId: CvId
-    // TODO: Add other params here
+    candidateId: CandidateId
 }

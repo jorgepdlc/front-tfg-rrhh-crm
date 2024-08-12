@@ -184,7 +184,7 @@ export function EventDetailFormWidget(props: EventDetailFormWidgetProps) {
                         <div className={styles.gridFormDiv}>
                             <div className="lg:col-span-2">
                                 <label id="title">
-                                    Title:
+                                    Title: *
                                     <input
                                         className={`${
                                             isEditing
@@ -196,12 +196,14 @@ export function EventDetailFormWidget(props: EventDetailFormWidgetProps) {
                                         id="title"
                                         defaultValue={data.title}
                                         readOnly={!isEditing}
+                                        required
+                                        maxLength={100}
                                     />
                                 </label>
                             </div>
                             <div>
                                 <label id="type">
-                                    Type of event:
+                                    Type of event: *
                                     <select
                                         className={`${
                                             isEditing
@@ -211,6 +213,7 @@ export function EventDetailFormWidget(props: EventDetailFormWidgetProps) {
                                         name="type"
                                         defaultValue={data.type}
                                         disabled={!isEditing}
+                                        required
                                     >
                                         <option value="INTERVIEW">
                                             INTERVIEW
@@ -222,7 +225,7 @@ export function EventDetailFormWidget(props: EventDetailFormWidgetProps) {
                             </div>
                             <div>
                                 <label>
-                                    Start Date:
+                                    Start Date: *
                                     <input
                                         className={`${
                                             isEditing
@@ -233,12 +236,13 @@ export function EventDetailFormWidget(props: EventDetailFormWidgetProps) {
                                         name="startDate"
                                         defaultValue={data.startDate}
                                         readOnly={!isEditing}
+                                        required
                                     />
                                 </label>
                             </div>
                             <div>
                                 <label>
-                                    End Date:
+                                    End Date: *
                                     <input
                                         className={`${
                                             isEditing
@@ -249,6 +253,7 @@ export function EventDetailFormWidget(props: EventDetailFormWidgetProps) {
                                         name="endDate"
                                         defaultValue={data.endDate}
                                         readOnly={!isEditing}
+                                        required
                                     />
                                 </label>
                             </div>
@@ -270,6 +275,7 @@ export function EventDetailFormWidget(props: EventDetailFormWidgetProps) {
                                                 window.open(data.link, '_blank')
                                             }
                                         }}
+                                        maxLength={350}
                                     />
                                 </label>
                             </div>
@@ -285,6 +291,7 @@ export function EventDetailFormWidget(props: EventDetailFormWidgetProps) {
                                         name="description"
                                         defaultValue={data.description}
                                         readOnly={!isEditing}
+                                        maxLength={500}
                                     />
                                 </label>
                             </div>

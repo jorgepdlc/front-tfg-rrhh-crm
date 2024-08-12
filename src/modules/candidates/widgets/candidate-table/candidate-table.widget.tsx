@@ -83,7 +83,6 @@ export function CandidateTableWidget(props: CandidateTableWidgetProps) {
                 .includes(searchTerm.toLowerCase()) ||
             candidate.role.toLowerCase().includes(searchTerm.toLowerCase()) ||
             candidate.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            candidate.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
             candidate.phone.toLowerCase().includes(searchTerm.toLowerCase()) ||
             candidate.candidateStatus
                 .toLowerCase()

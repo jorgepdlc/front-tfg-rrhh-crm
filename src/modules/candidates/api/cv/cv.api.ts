@@ -5,18 +5,16 @@ import {
     CvDeleteApiParams,
     CvGetApiParams,
     CvId,
-    CvListApiParams,
-    CvPaginatedApiResult,
-    CvUpdateApiParams,
 } from './cv.types'
+import { CandidateId } from '../candidate'
 
 export const cvApiProto = (
     baseUrl: string = process.env.NEXT_PUBLIC_API_ENDPOINT || '/api',
     defaultApiContext = DEFAULT_API_CONTEXT
 ) => {
-    const endpointUrl = `${baseUrl}/cv`
+    const endpointUrl = `${baseUrl}/candidates`
 
-    type UrlParams = { resourceId?: CvId }
+    type UrlParams = { resourceId?: CvId; candidateId: CandidateId }
     const endpoint = (
         urlParams: UrlParams,
         queryParams: Record<string, string>
@@ -25,55 +23,48 @@ export const cvApiProto = (
         const resourceIdParam =
             urlParams.resourceId === undefined ? '' : `/${urlParams.resourceId}`
 
-        // TODO: Customize the endpoint url generation here
-        return `${endpointUrl}${resourceIdParam}?${queryParamString}`
+        return `${endpointUrl}/${urlParams.candidateId}/cv${resourceIdParam}?${queryParamString}`
     }
 
     return {
-        async list(
+        async get(
             this: ApiContext,
-            { page, size, ...otherQueryParams }: CvListApiParams
-        ): Promise<CvPaginatedApiResult> {
-            const urlParams: UrlParams = {}
+            { candidateId, ...otherQueryParams }: CvGetApiParams
+        ): Promise<CvApiResult> {
+            const urlParams: UrlParams = { candidateId }
             const queryParams = {
-                // TODO: Map the pagination params as required by the API
-                page: `${page}`,
-                size: `${size}`,
-                // limit: `${size}`,
-                // offset: `${Math.max((page - 1) * size, 0)}`,
                 ...otherQueryParams,
             }
             const url = endpoint(urlParams, queryParams)
             console.debug(
-                `Listing Cv with page: ${page}, size: ${size}`,
-                `on url: ${url}`
+                `Getting Cv with candidateId: ${candidateId} on url: ${url}`
             )
 
             const response = await this.client.get(url)
 
-            // TODO: Add code handle the response if needed
-
-            return response.data as CvPaginatedApiResult
+            return response.data as CvApiResult
         },
         async delete(
             this: ApiContext,
-            { resourceId, ...queryParams }: CvDeleteApiParams
+            { candidateId, ...queryParams }: CvDeleteApiParams
         ): Promise<boolean> {
-            const urlParams: UrlParams = { resourceId }
+            const urlParams: UrlParams = { candidateId }
             const url = endpoint(urlParams, queryParams)
-            console.debug(`Deleting Cv with id:`, resourceId, `on url: ${url}`)
+            console.debug(
+                `Deleting Cv with candidateId:`,
+                candidateId,
+                `on url: ${url}`
+            )
 
             const response = await this.client.delete(url)
-
-            // TODO: Add code handle the response if needed
 
             return response.status >= 200 && response.status < 300
         },
         async create(
             this: ApiContext,
-            { newResource, ...queryParams }: CvCreateApiParams
-        ): Promise<CvId> {
-            const urlParams: UrlParams = {}
+            { newResource, candidateId, ...queryParams }: CvCreateApiParams
+        ): Promise<boolean> {
+            const urlParams: UrlParams = { candidateId }
             const url = endpoint(urlParams, queryParams)
             console.debug(
                 `Creating Cv resource:`,
@@ -82,64 +73,7 @@ export const cvApiProto = (
             )
             const response = await this.client.post(url, newResource)
 
-            // TODO: Add code handle the response if needed
-
-            // TODO: Adapt code to handle the receiving of the resourceId (if any)
-            const locationHeader = response.headers.location as
-                | string
-                | undefined
-
-            if (locationHeader) {
-                const segments = new URL(locationHeader).pathname.split('/')
-                const lastIdx = segments.length - 1
-                const resourceId =
-                    segments[lastIdx] || segments[Math.max(lastIdx - 1, 0)]
-                if (!resourceId)
-                    console.warn(new Error('Invalid location header received'))
-                return resourceId as CvId
-            }
-
-            console.warn(new Error('No location header received'))
-            return '' as CvId
-        },
-        async update(
-            this: ApiContext,
-            {
-                updatedResource,
-                // resourceId,
-                ...queryParams
-            }: CvUpdateApiParams
-        ): Promise<boolean> {
-            const urlParams: UrlParams = {
-                // resourceId
-            }
-            const url = endpoint(urlParams, queryParams)
-            console.debug(
-                `updating Cv resource:`,
-                updatedResource,
-                `on url: ${url}`
-            )
-            const response = await this.client.put(url, updatedResource)
-
-            // TODO: Add code handle the response if needed
-
             return response.status >= 200 && response.status < 300
-        },
-        async get(
-            this: ApiContext,
-            { resourceId, ...queryParams }: CvGetApiParams
-        ): Promise<CvApiResult> {
-            const urlParams: UrlParams = {
-                resourceId,
-            }
-            const url = endpoint(urlParams, queryParams)
-            console.debug(`Getting Cv with id:`, resourceId, `on url: ${url}`)
-
-            const response = await this.client.get(url)
-
-            // TODO: Add code handle the response if needed
-
-            return response.data as CvApiResult
         },
         ...defaultApiContext,
     }

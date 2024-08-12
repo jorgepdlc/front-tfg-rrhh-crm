@@ -206,7 +206,7 @@ export function AddRequirementWidget(props: AddRequirementWidgetProps) {
                 )}
             </div>
             <div className={styles.gridFormDiv}>
-                {posData.data && posData.data.length > 0 ? (
+                {posData?.data && posData?.data?.length > 0 ? (
                     posData.data.map((req) => (
                         <div
                             key={req.id}

@@ -17,6 +17,7 @@ export function AddLinkWidget(props: AddLinkWidgetProps) {
         size: 10,
     })
     const [isModalOpen, setIsModalOpen] = useState(false)
+    const [isModified, setIsModified] = useState(false)
 
     const handleOpenModal = () => {
         setIsModalOpen(true)
@@ -97,7 +98,8 @@ export function AddLinkWidget(props: AddLinkWidgetProps) {
         })
 
         if (success) {
-            alert('Link updated')
+            await refetch()
+            setIsModified(false)
         } else {
             alert('Failed to update link')
         }
@@ -115,13 +117,39 @@ export function AddLinkWidget(props: AddLinkWidgetProps) {
         <div data-testid="add-link-widget" className={styles.container}>
             <div className="flex items-center">
                 <h1 className="mr-4 mt-3">Links</h1>
-                <button
-                    type="button"
-                    className={styles.button}
-                    onClick={handleOpenModal}
-                >
-                    Add
-                </button>
+                {props.isEditing &&
+                    (data?.data?.length <= 5 || data.data == null) && (
+                        <button
+                            type="button"
+                            className={styles.button}
+                            onClick={handleOpenModal}
+                        >
+                            Add
+                        </button>
+                    )}
+                {isModified && (
+                    <button
+                        type="submit"
+                        form="linkForm"
+                        className={`ml-2 ${styles.button}`}
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            className="size-4 mr-2"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+                            />
+                        </svg>
+                        Update
+                    </button>
+                )}
             </div>
             {isModalOpen && (
                 <>
@@ -138,19 +166,20 @@ export function AddLinkWidget(props: AddLinkWidgetProps) {
                                                 type="text"
                                                 name="url"
                                                 id="url"
+                                                maxLength={350}
                                                 required
                                             />
                                         </label>
                                     </div>
                                     <div>
                                         <label id="description">
-                                            Description: *
+                                            Description:
                                             <input
                                                 className={styles.activeInput}
                                                 type="text"
                                                 name="description"
                                                 id="description"
-                                                required
+                                                maxLength={100}
                                             />
                                         </label>
                                     </div>
@@ -177,7 +206,7 @@ export function AddLinkWidget(props: AddLinkWidgetProps) {
                 </>
             )}
             <div className="mt-4">
-                {data.data && data.data.length > 0 ? (
+                {data?.data && data?.data?.length > 0 ? (
                     data.data.map((lin) => (
                         <div key={lin.id} className="pl-4">
                             <div className="flex items-center">
@@ -215,7 +244,7 @@ export function AddLinkWidget(props: AddLinkWidgetProps) {
                             >
                                 <div className={styles.card}>
                                     <label className="lg:col-span-2">
-                                        Link:
+                                        Link: *
                                         <input
                                             className={`${
                                                 props.isEditing
@@ -234,6 +263,9 @@ export function AddLinkWidget(props: AddLinkWidgetProps) {
                                                     )
                                                 }
                                             }}
+                                            onChange={() => setIsModified(true)}
+                                            maxLength={350}
+                                            required
                                         />
                                     </label>
                                     <label>
@@ -248,6 +280,8 @@ export function AddLinkWidget(props: AddLinkWidgetProps) {
                                             name="linkDescription"
                                             defaultValue={lin.description}
                                             readOnly={!props.isEditing}
+                                            onChange={() => setIsModified(true)}
+                                            maxLength={100}
                                         />
                                     </label>
                                 </div>

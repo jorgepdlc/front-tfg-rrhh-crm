@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 
 export type UserDetailFormWidgetProps = { userId: UserId }
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 export function UserDetailFormWidget(props: UserDetailFormWidgetProps) {
     const router = useRouter()
     const [isEditing, setIsEditing] = useState(false)
@@ -70,6 +71,23 @@ export function UserDetailFormWidget(props: UserDetailFormWidgetProps) {
         }
     }
 
+    const handleRecoverButton = async () => {
+        const success = await userApi.patch({
+            updatedResource: {
+                finishedDate: undefined,
+            },
+            resourceId: props.userId,
+        })
+
+        if (success) {
+            try {
+                await refetch()
+            } catch (error) {
+                console.error('Error refetching user', error)
+            }
+        }
+    }
+
     if (isLoading) {
         return <LoadingSpinner />
     }
@@ -125,7 +143,7 @@ export function UserDetailFormWidget(props: UserDetailFormWidgetProps) {
                                 </svg>
                                 Save
                             </button>
-                        ) : (
+                        ) : data.finishedDate === null ? (
                             <button
                                 type="button"
                                 className={`${
@@ -152,46 +170,72 @@ export function UserDetailFormWidget(props: UserDetailFormWidgetProps) {
                                 </svg>
                                 Delete
                             </button>
+                        ) : (
+                            <button
+                                type="button"
+                                className={styles.recoverButton}
+                                onClick={handleRecoverButton}
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke-width="1.5"
+                                    stroke="currentColor"
+                                    className="size-6 mr-2"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-3.7-3.7 48.678 48.678 0 0 0-7.324 0 4.006 4.006 0 0 0-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 0 0 3.7 3.7 48.656 48.656 0 0 0 7.324 0 4.006 4.006 0 0 0 3.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3-3 3"
+                                    />
+                                </svg>
+                                Allow
+                            </button>
                         )}
                     </span>
                     <span>
-                        <button
-                            type="button"
-                            className={`${
-                                isEditing || data.username === 'JPrietoC'
-                                    ? styles.buttonDisabled
-                                    : styles.button
-                            }`}
-                            disabled={isEditing || data.username === 'JPrietoC'}
-                            onClick={() => setIsEditing(true)}
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth="1.5"
-                                stroke="currentColor"
-                                className="size-6 mr-2"
+                        {data.finishedDate === null && (
+                            <button
+                                type="button"
+                                className={`${
+                                    isEditing || data.username === 'JPrietoC'
+                                        ? styles.buttonDisabled
+                                        : styles.button
+                                }`}
+                                disabled={
+                                    isEditing || data.username === 'JPrietoC'
+                                }
+                                onClick={() => setIsEditing(true)}
                             >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
-                                />
-                            </svg>
-                            Edit
-                        </button>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth="1.5"
+                                    stroke="currentColor"
+                                    className="size-6 mr-2"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+                                    />
+                                </svg>
+                                Edit
+                            </button>
+                        )}
                     </span>
                 </div>
             </div>
             <div className={styles.formInfo}>
                 <div className={styles.field}>
                     <h1>User Information</h1>
-                    <form onSubmit={submit} id="userForm">
+                    <form onSubmit={submit} id="userUpdateForm">
                         <div className={styles.gridFormDiv}>
                             <div>
                                 <label id="name">
-                                    Name:
+                                    Name: *
                                     <input
                                         className={`${
                                             isEditing
@@ -203,12 +247,14 @@ export function UserDetailFormWidget(props: UserDetailFormWidgetProps) {
                                         id="name"
                                         defaultValue={data.name}
                                         readOnly={!isEditing}
+                                        maxLength={100}
+                                        required
                                     />
                                 </label>
                             </div>
                             <div className="lg:col-span-2">
                                 <label id="lastname">
-                                    Lastname:
+                                    Lastname: *
                                     <input
                                         className={`${
                                             isEditing
@@ -220,6 +266,8 @@ export function UserDetailFormWidget(props: UserDetailFormWidgetProps) {
                                         id="lastname"
                                         defaultValue={data.lastname}
                                         readOnly={!isEditing}
+                                        maxLength={100}
+                                        required
                                     />
                                 </label>
                             </div>
@@ -263,12 +311,13 @@ export function UserDetailFormWidget(props: UserDetailFormWidgetProps) {
                                         id="phone"
                                         defaultValue={data.phone}
                                         readOnly={!isEditing}
+                                        maxLength={100}
                                     />
                                 </label>
                             </div>
                             <div>
                                 <label id="position">
-                                    Position:
+                                    Position: *
                                     <input
                                         className={`${
                                             isEditing
@@ -280,12 +329,14 @@ export function UserDetailFormWidget(props: UserDetailFormWidgetProps) {
                                         id="position"
                                         defaultValue={data.position}
                                         readOnly={!isEditing}
+                                        maxLength={100}
+                                        required
                                     />
                                 </label>
                             </div>
                             <div className="md:col-span-2">
                                 <label id="role">
-                                    User Role:
+                                    User Role: *
                                     <select
                                         className={`${
                                             isEditing
@@ -296,6 +347,7 @@ export function UserDetailFormWidget(props: UserDetailFormWidgetProps) {
                                         id="role"
                                         defaultValue={data.role}
                                         disabled={!isEditing}
+                                        required
                                     >
                                         <option value="ADMIN">ADMIN</option>
                                         <option value="USER">USER</option>
@@ -310,7 +362,7 @@ export function UserDetailFormWidget(props: UserDetailFormWidgetProps) {
                         <button
                             type="submit"
                             className={styles.button}
-                            form="userForm"
+                            form="userUpdateForm"
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"

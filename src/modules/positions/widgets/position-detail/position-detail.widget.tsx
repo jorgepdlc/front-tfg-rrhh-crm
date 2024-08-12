@@ -218,7 +218,7 @@ export function PositionDetailWidget(props: PositionDetailWidgetProps) {
                         <div className={styles.gridFormDiv}>
                             <div>
                                 <label id="name">
-                                    Name:
+                                    Name: *
                                     <input
                                         className={`${
                                             isEditing
@@ -230,6 +230,8 @@ export function PositionDetailWidget(props: PositionDetailWidgetProps) {
                                         id="name"
                                         defaultValue={data.name}
                                         readOnly={!isEditing}
+                                        maxLength={100}
+                                        required
                                     />
                                 </label>
                             </div>
@@ -246,12 +248,13 @@ export function PositionDetailWidget(props: PositionDetailWidgetProps) {
                                         name="department"
                                         defaultValue={data.department}
                                         readOnly={!isEditing}
+                                        maxLength={100}
                                     />
                                 </label>
                             </div>
                             <div>
                                 <label>
-                                    Employment Type:
+                                    Employment Type: *
                                     <select
                                         className={`${
                                             isEditing
@@ -261,6 +264,7 @@ export function PositionDetailWidget(props: PositionDetailWidgetProps) {
                                         name="employmentType"
                                         defaultValue={data.employmentType}
                                         disabled={!isEditing}
+                                        required
                                     >
                                         <option value="FULL_TIME">
                                             FULL-TIME
@@ -280,7 +284,7 @@ export function PositionDetailWidget(props: PositionDetailWidgetProps) {
                             <div className="flex justify-between items-center">
                                 <div>
                                     <label>
-                                        Min salary (EUR):
+                                        Min salary (EUR): *
                                         <input
                                             className={`${
                                                 isEditing
@@ -291,13 +295,16 @@ export function PositionDetailWidget(props: PositionDetailWidgetProps) {
                                             name="salaryRangeMin"
                                             defaultValue={data.salaryRangeMin}
                                             readOnly={!isEditing}
+                                            min={0}
+                                            max={9999999}
+                                            required
                                         />
                                     </label>
                                 </div>
                                 <div className="px-2">-</div>
                                 <div>
                                     <label>
-                                        Max Salary (EUR):
+                                        Max Salary (EUR): *
                                         <input
                                             className={`${
                                                 isEditing
@@ -308,6 +315,9 @@ export function PositionDetailWidget(props: PositionDetailWidgetProps) {
                                             name="salaryRangeMax"
                                             defaultValue={data.salaryRangeMax}
                                             readOnly={!isEditing}
+                                            min={0}
+                                            max={9999999}
+                                            required
                                         />
                                     </label>
                                 </div>
@@ -325,12 +335,13 @@ export function PositionDetailWidget(props: PositionDetailWidgetProps) {
                                         name="jobLevel"
                                         defaultValue={data.jobLevel}
                                         readOnly={!isEditing}
+                                        maxLength={100}
                                     />
                                 </label>
                             </div>
                             <div>
                                 <label>
-                                    Years of Experience required:
+                                    Years of Experience required: *
                                     <input
                                         className={`${
                                             isEditing
@@ -341,12 +352,14 @@ export function PositionDetailWidget(props: PositionDetailWidgetProps) {
                                         name="yearsExperience"
                                         defaultValue={data.yearsExperience}
                                         readOnly={!isEditing}
+                                        max={50}
+                                        required
                                     />
                                 </label>
                             </div>
                             <div>
                                 <label>
-                                    Location:
+                                    Location: *
                                     <select
                                         className={`${
                                             isEditing
@@ -356,6 +369,7 @@ export function PositionDetailWidget(props: PositionDetailWidgetProps) {
                                         name="location"
                                         defaultValue={data.location}
                                         disabled={!isEditing}
+                                        required
                                     >
                                         <option value="BARCELONA">
                                             BARCELONA
@@ -373,7 +387,7 @@ export function PositionDetailWidget(props: PositionDetailWidgetProps) {
                             </div>
                             <div>
                                 <label>
-                                    Status:
+                                    Status: *
                                     <select
                                         className={`${
                                             isEditing
@@ -383,6 +397,7 @@ export function PositionDetailWidget(props: PositionDetailWidgetProps) {
                                         name="positionStatus"
                                         defaultValue={data.positionStatus}
                                         disabled={!isEditing}
+                                        required
                                     >
                                         <option value="OPEN">OPEN</option>
                                         <option value="CLOSED">CLOSED</option>
@@ -416,6 +431,7 @@ export function PositionDetailWidget(props: PositionDetailWidgetProps) {
                                         name="description"
                                         defaultValue={data.description}
                                         readOnly={!isEditing}
+                                        maxLength={500}
                                     />
                                 </label>
                             </div>

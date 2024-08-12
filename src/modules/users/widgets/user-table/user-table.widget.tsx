@@ -212,7 +212,7 @@ export function UserTableWidget(props: UserTableWidgetProps) {
                         }`}
                         onClick={() => handleAllowedFilterChange('deleted')}
                     >
-                        Deleted Users
+                        Unallowed Users
                     </button>
                 </div>
             )}

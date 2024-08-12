@@ -216,7 +216,7 @@ export function AddParticipantWidget(props: AddParticipantWidgetProps) {
                                 <h3>
                                     {c.name} {c.lastname}:
                                 </h3>
-                                <div className="flex">
+                                <div className="flex max-h-10">
                                     <button
                                         type="button"
                                         className={styles.viewButton}

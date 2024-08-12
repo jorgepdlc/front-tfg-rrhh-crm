@@ -21,6 +21,7 @@ export function AddEducationWidget(props: AddEducationWidgetProps) {
         size: 10,
     })
     const [isModalOpen, setIsModalOpen] = useState(false)
+    const [isModified, setIsModified] = useState(false)
 
     const handleOpenModal = () => {
         setIsModalOpen(true)
@@ -39,6 +40,7 @@ export function AddEducationWidget(props: AddEducationWidgetProps) {
 
         if (success) {
             await refetch()
+            props.onSuccess()
         }
     }
 
@@ -110,7 +112,8 @@ export function AddEducationWidget(props: AddEducationWidgetProps) {
         })
 
         if (success) {
-            alert('Education updated')
+            await refetch()
+            setIsModified(false)
         } else {
             alert('Failed to update education')
         }
@@ -128,13 +131,39 @@ export function AddEducationWidget(props: AddEducationWidgetProps) {
         <div data-testid="add-education-widget" className={styles.container}>
             <div className="flex items-center">
                 <h1 className="mr-4 mt-3">Education</h1>
-                <button
-                    type="button"
-                    className={styles.button}
-                    onClick={handleOpenModal}
-                >
-                    Add
-                </button>
+                {props.isEditing &&
+                    (data?.data?.length <= 5 || data.data == null) && (
+                        <button
+                            type="button"
+                            className={styles.button}
+                            onClick={handleOpenModal}
+                        >
+                            Add
+                        </button>
+                    )}
+                {isModified && (
+                    <button
+                        type="submit"
+                        form="educationForm"
+                        className={`ml-2 ${styles.button}`}
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            className="size-4 mr-2"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+                            />
+                        </svg>
+                        Update
+                    </button>
+                )}
             </div>
             {isModalOpen && (
                 <>
@@ -151,19 +180,20 @@ export function AddEducationWidget(props: AddEducationWidgetProps) {
                                                 type="text"
                                                 name="degree"
                                                 id="degree"
+                                                maxLength={100}
                                                 required
                                             />
                                         </label>
                                     </div>
                                     <div>
                                         <label id="school">
-                                            School: *
+                                            School:
                                             <input
                                                 className={styles.activeInput}
                                                 type="text"
                                                 name="school"
                                                 id="school"
-                                                required
+                                                maxLength={100}
                                             />
                                         </label>
                                     </div>
@@ -243,7 +273,7 @@ export function AddEducationWidget(props: AddEducationWidgetProps) {
                             >
                                 <div className={`w-full ${styles.card}`}>
                                     <label>
-                                        Degree:
+                                        Degree: *
                                         <input
                                             className={`${
                                                 props.isEditing
@@ -254,6 +284,9 @@ export function AddEducationWidget(props: AddEducationWidgetProps) {
                                             name="educationDegree"
                                             defaultValue={edu.degree}
                                             readOnly={!props.isEditing}
+                                            maxLength={100}
+                                            onChange={() => setIsModified(true)}
+                                            required
                                         />
                                     </label>
                                     <label>
@@ -268,10 +301,12 @@ export function AddEducationWidget(props: AddEducationWidgetProps) {
                                             name="educationSchool"
                                             defaultValue={edu.school}
                                             readOnly={!props.isEditing}
+                                            maxLength={100}
+                                            onChange={() => setIsModified(true)}
                                         />
                                     </label>
                                     <label>
-                                        End Date:
+                                        End Date: *
                                         <input
                                             className={`${
                                                 props.isEditing
@@ -285,6 +320,8 @@ export function AddEducationWidget(props: AddEducationWidgetProps) {
                                                 10
                                             )}
                                             readOnly={!props.isEditing}
+                                            onChange={() => setIsModified(true)}
+                                            required
                                         />
                                     </label>
                                 </div>
