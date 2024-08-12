@@ -70,6 +70,13 @@ export function EventDetailFormWidget(props: EventDetailFormWidgetProps) {
     }
 
     const handleDeleteButton = async () => {
+        const confirmed = window.confirm(
+            'Are you sure you want to delete this event?'
+        )
+        if (!confirmed) {
+            return
+        }
+
         const success = await eventsApi.delete({
             resourceId: props.eventId,
         })

@@ -1,10 +1,8 @@
 import { ApiContext, DEFAULT_API_CONTEXT } from '@/common/providers/api-context'
 import {
-    CvApiResult,
     CvCreateApiParams,
     CvDeleteApiParams,
     CvGetApiParams,
-    CvId,
 } from './cv.types'
 import { CandidateId } from '../candidate'
 
@@ -14,42 +12,40 @@ export const cvApiProto = (
 ) => {
     const endpointUrl = `${baseUrl}/candidates`
 
-    type UrlParams = { resourceId?: CvId; candidateId: CandidateId }
-    const endpoint = (
-        urlParams: UrlParams,
-        queryParams: Record<string, string>
-    ) => {
-        const queryParamString = new URLSearchParams(queryParams).toString()
-        const resourceIdParam =
-            urlParams.resourceId === undefined ? '' : `/${urlParams.resourceId}`
-
-        return `${endpointUrl}/${urlParams.candidateId}/cv${resourceIdParam}?${queryParamString}`
+    type UrlParams = { candidateId: CandidateId }
+    const endpoint = (urlParams: UrlParams) => {
+        return `${endpointUrl}/${urlParams.candidateId}/cv`
     }
 
     return {
         async get(
             this: ApiContext,
-            { candidateId, ...otherQueryParams }: CvGetApiParams
-        ): Promise<CvApiResult> {
+            { candidateId }: CvGetApiParams
+        ): Promise<Blob> {
             const urlParams: UrlParams = { candidateId }
-            const queryParams = {
-                ...otherQueryParams,
-            }
-            const url = endpoint(urlParams, queryParams)
+
+            const url = endpoint(urlParams)
             console.debug(
                 `Getting Cv with candidateId: ${candidateId} on url: ${url}`
             )
 
-            const response = await this.client.get(url)
+            const response = await this.client.get(
+                `${
+                    process.env.NEXT_PUBLIC_API_ENDPOINT || ''
+                }/candidates/${candidateId}/cv`,
+                {
+                    responseType: 'blob',
+                }
+            )
 
-            return response.data as CvApiResult
+            return response.data as Blob
         },
         async delete(
             this: ApiContext,
-            { candidateId, ...queryParams }: CvDeleteApiParams
+            { candidateId }: CvDeleteApiParams
         ): Promise<boolean> {
             const urlParams: UrlParams = { candidateId }
-            const url = endpoint(urlParams, queryParams)
+            const url = endpoint(urlParams)
             console.debug(
                 `Deleting Cv with candidateId:`,
                 candidateId,
@@ -62,16 +58,23 @@ export const cvApiProto = (
         },
         async create(
             this: ApiContext,
-            { newResource, candidateId, ...queryParams }: CvCreateApiParams
+            { newResource, candidateId }: CvCreateApiParams
         ): Promise<boolean> {
             const urlParams: UrlParams = { candidateId }
-            const url = endpoint(urlParams, queryParams)
+            const url = endpoint(urlParams)
             console.debug(
                 `Creating Cv resource:`,
                 newResource,
                 `on url: ${url}`
             )
-            const response = await this.client.post(url, newResource)
+            const formData = new FormData()
+            formData.append('file', newResource.file)
+
+            const response = await this.client.post(url, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
 
             return response.status >= 200 && response.status < 300
         },

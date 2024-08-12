@@ -9,6 +9,7 @@ export type Candidate = {
     phone: string
     candidateStatus: 'EMPLOYED' | 'UNEMPLOYED' | 'DISCARDED'
     isAxpe: boolean
+    cvSaved: boolean
     education: [
         {
             degree: string

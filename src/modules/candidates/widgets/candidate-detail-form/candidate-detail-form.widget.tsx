@@ -96,6 +96,13 @@ export function CandidateDetailFormWidget(
     }
 
     const handleDeleteButton = async () => {
+        const confirmed = window.confirm(
+            'Are you sure you want to discard this candidate?'
+        )
+        if (!confirmed) {
+            return
+        }
+
         const success = await candidateApi.delete({
             resourceId: props.candidateId,
         })

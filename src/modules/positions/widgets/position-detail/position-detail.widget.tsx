@@ -107,6 +107,13 @@ export function PositionDetailWidget(props: PositionDetailWidgetProps) {
     }
 
     const handleDeleteButton = async () => {
+        const confirmed = window.confirm(
+            'Are you sure you want to delete this position?'
+        )
+        if (!confirmed) {
+            return
+        }
+
         const success = await positionApi.delete({
             resourceId: props.positionId,
         })

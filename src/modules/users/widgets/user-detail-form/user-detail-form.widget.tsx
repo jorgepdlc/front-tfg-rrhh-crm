@@ -62,6 +62,13 @@ export function UserDetailFormWidget(props: UserDetailFormWidgetProps) {
     }
 
     const handleDeleteButton = async () => {
+        const confirmed = window.confirm(
+            'Are you sure you want to unallow this user?'
+        )
+        if (!confirmed) {
+            return
+        }
+
         const success = await userApi.delete({
             resourceId: props.userId,
         })
