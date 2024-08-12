@@ -163,6 +163,13 @@ export function EventCreateFormWidget(props: EventCreateFormWidgetProps) {
                 </div>
                 <div className="flex justify-end">
                     <button
+                        type="button"
+                        className={`mr-2 ${styles.delButton}`}
+                        onClick={() => router.push('/events')}
+                    >
+                        Cancel
+                    </button>
+                    <button
                         type="submit"
                         className={styles.button}
                         form="eventCreateForm"

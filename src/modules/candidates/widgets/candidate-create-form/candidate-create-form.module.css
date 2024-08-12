@@ -81,3 +81,7 @@
         @apply grid gap-x-4 lg:grid-cols-3 md:grid-cols-2 mb-2;
     }
 }
+
+.delButton {
+    @apply focus:outline-none text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg px-3 text-sm ml-2;
+}

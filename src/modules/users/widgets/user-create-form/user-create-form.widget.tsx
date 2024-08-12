@@ -221,6 +221,13 @@ export function UserCreateFormWidget(props: UserCreateFormWidgetProps) {
                 </div>
                 <div className="flex justify-end">
                     <button
+                        type="button"
+                        className={`mr-2 ${styles.deleteButton}`}
+                        onClick={() => router.push('/users')}
+                    >
+                        Cancel
+                    </button>
+                    <button
                         type="submit"
                         className={styles.button}
                         form="userCreateForm"

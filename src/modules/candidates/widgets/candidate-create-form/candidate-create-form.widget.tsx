@@ -196,6 +196,13 @@ export function CandidateCreateFormWidget(
                 </div>
                 <div className="flex justify-end">
                     <button
+                        type="button"
+                        className={`mr-2 ${styles.delButton}`}
+                        onClick={() => router.push('/candidates')}
+                    >
+                        Cancel
+                    </button>
+                    <button
                         type="submit"
                         className={styles.button}
                         form="candidateCreateForm"
