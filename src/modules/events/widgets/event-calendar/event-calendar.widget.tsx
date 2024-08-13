@@ -103,7 +103,9 @@ export function EventCalendarWidget(props: EventCalendarWidgetProps) {
                     headerToolbar={{
                         start: isMediumScreen ? 'today prev,next' : 'prev,next',
                         center: isMediumScreen ? 'title' : '',
-                        right: 'dayGridMonth,listMonth',
+                        right: isMediumScreen
+                            ? 'dayGridMonth,dayGridWeek,timeGridDay,listMonth'
+                            : 'dayGridMonth,listMonth',
                     }}
                     dayMaxEventRows={2}
                     dayMaxEvents={2}

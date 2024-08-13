@@ -106,23 +106,25 @@ export function CandidateCreateFormWidget(
                         <div className={styles.gridFormDiv}>
                             <div>
                                 <label id="candidateName">
-                                    Name:
+                                    Name: *
                                     <input
                                         className={styles.activeInput}
                                         type="text"
                                         name="candidateName"
                                         id="candidateName"
+                                        required
                                     />
                                 </label>
                             </div>
                             <div>
                                 <label id="candidateLastname">
-                                    Lastname:
+                                    Lastname: *
                                     <input
                                         className={styles.activeInput}
                                         type="text"
                                         name="candidateLastname"
                                         id="candidateLastname"
+                                        required
                                     />
                                 </label>
                             </div>
@@ -139,34 +141,37 @@ export function CandidateCreateFormWidget(
                             </div>
                             <div>
                                 <label id="candidateRole">
-                                    Role:
+                                    Role: *
                                     <input
                                         className={styles.activeInput}
                                         type="text"
                                         name="candidateRole"
                                         id="candidateRole"
+                                        required
                                     />
                                 </label>
                             </div>
                             <div className="col-span-2">
                                 <label id="candidateEmail">
-                                    Email:
+                                    Email: *
                                     <input
                                         className={styles.activeInput}
                                         type="text"
                                         name="candidateEmail"
                                         id="candidateEmail"
+                                        required
                                     />
                                 </label>
                             </div>
                             <div className="lg:col-span-2">
                                 <label id="candidateStatus">
-                                    Candidate Status:
+                                    Candidate Status: *
                                     <select
                                         className={styles.activeInput}
                                         defaultValue={'UNEMPLOYED'}
                                         name="candidateStatus"
                                         id="candidateStatus"
+                                        required
                                     >
                                         <option value="EMPLOYED">
                                             EMPLOYED
@@ -179,12 +184,13 @@ export function CandidateCreateFormWidget(
                             </div>
                             <div>
                                 <label id="isAxpe">
-                                    Is Axpe:
+                                    Is Axpe: *
                                     <select
                                         className={styles.activeInput}
                                         defaultValue={'false'}
                                         name="isAxpe"
                                         id="isAxpe"
+                                        required
                                     >
                                         <option value="true">YES</option>
                                         <option value="false">NO</option>
