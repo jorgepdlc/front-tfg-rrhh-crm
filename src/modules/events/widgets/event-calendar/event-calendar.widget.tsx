@@ -104,7 +104,7 @@ export function EventCalendarWidget(props: EventCalendarWidgetProps) {
                         start: isMediumScreen ? 'today prev,next' : 'prev,next',
                         center: isMediumScreen ? 'title' : '',
                         right: isMediumScreen
-                            ? 'dayGridMonth,dayGridWeek,timeGridDay,listMonth'
+                            ? 'dayGridMonth,dayGridWeek,listMonth'
                             : 'dayGridMonth,listMonth',
                     }}
                     dayMaxEventRows={2}
@@ -118,6 +118,11 @@ export function EventCalendarWidget(props: EventCalendarWidgetProps) {
                     events={formattedData}
                     eventClick={(info) => {
                         router.push(`/events/${info.event.id}`)
+                    }}
+                    eventTimeFormat={{
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false,
                     }}
                 />
             </div>

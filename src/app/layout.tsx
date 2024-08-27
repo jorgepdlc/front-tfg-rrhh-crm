@@ -4,8 +4,8 @@ import { ApplicationLayout } from '@/common/layouts/application'
 import { PropsWithChildren } from 'react'
 
 export const metadata = {
-    title: 'Next SSR Archetype',
-    description: 'Sample skeleton webpage',
+    title: 'AXPE - RRHH crm',
+    description: 'RRHH application to manage candidates and job positions',
 }
 
 export default function Layout(props: PropsWithChildren) {
