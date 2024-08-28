@@ -63,6 +63,8 @@ export function PositionTableWidget(props: PositionTableWidgetProps) {
         open: false,
         closed: false,
     })
+    const [sortBy, setSortBy] = useState<string>('name')
+    const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
 
     if (isLoading) {
         return <LoadingSpinner />
@@ -99,6 +101,19 @@ export function PositionTableWidget(props: PositionTableWidgetProps) {
             ...prevFilters,
             [status]: !prevFilters[status],
         }))
+    }
+
+    const handleSortChange = (column: string) => {
+        if (sortBy === column) {
+            // Toggle sort direction if the same column is clicked
+            setSortDirection((prevDirection) =>
+                prevDirection === 'asc' ? 'desc' : 'asc'
+            )
+        } else {
+            // Set new column and default to ascending order
+            setSortBy(column)
+            setSortDirection('asc')
+        }
     }
 
     const matchesSearchTerm = (position: Position) => {
@@ -160,6 +175,19 @@ export function PositionTableWidget(props: PositionTableWidgetProps) {
             )
         }) || []
 
+    const sortedPositions = filteredPositions.sort((a, b) => {
+        const aValue = a[sortBy as keyof Position]
+        const bValue = b[sortBy as keyof Position]
+
+        if (aValue < bValue) {
+            return sortDirection === 'asc' ? -1 : 1
+        }
+        if (aValue > bValue) {
+            return sortDirection === 'asc' ? 1 : -1
+        }
+        return 0
+    })
+
     return (
         <div data-testid="candidate-table-widget" className={styles.container}>
             <div className={styles.options}>
@@ -207,13 +235,13 @@ export function PositionTableWidget(props: PositionTableWidgetProps) {
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
                                 viewBox="0 0 24 24"
-                                stroke-width="1.5"
+                                strokeWidth="1.5"
                                 stroke="currentColor"
                                 className="size-6 mr-1"
                             >
                                 <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
                                     d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75"
                                 />
                             </svg>
@@ -230,13 +258,13 @@ export function PositionTableWidget(props: PositionTableWidgetProps) {
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
                                 viewBox="0 0 24 24"
-                                stroke-width="1.5"
+                                strokeWidth="1.5"
                                 stroke="currentColor"
                                 className="size-6 mr-1"
                             >
                                 <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
                                     d="M12 4.5v15m7.5-7.5h-15"
                                 />
                             </svg>
@@ -264,13 +292,13 @@ export function PositionTableWidget(props: PositionTableWidgetProps) {
                                     xmlns="http://www.w3.org/2000/svg"
                                     fill="none"
                                     viewBox="0 0 24 24"
-                                    stroke-width="1.5"
+                                    strokeWidth="1.5"
                                     stroke="currentColor"
                                     className="size-4 ml-1"
                                 >
                                     <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
                                         d="m19.5 8.25-7.5 7.5-7.5-7.5"
                                     />
                                 </svg>
@@ -355,13 +383,13 @@ export function PositionTableWidget(props: PositionTableWidgetProps) {
                                     xmlns="http://www.w3.org/2000/svg"
                                     fill="none"
                                     viewBox="0 0 24 24"
-                                    stroke-width="1.5"
+                                    strokeWidth="1.5"
                                     stroke="currentColor"
                                     className="size-4 ml-1"
                                 >
                                     <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
                                         d="m19.5 8.25-7.5 7.5-7.5-7.5"
                                     />
                                 </svg>
@@ -460,13 +488,13 @@ export function PositionTableWidget(props: PositionTableWidgetProps) {
                                     xmlns="http://www.w3.org/2000/svg"
                                     fill="none"
                                     viewBox="0 0 24 24"
-                                    stroke-width="1.5"
+                                    strokeWidth="1.5"
                                     stroke="currentColor"
                                     className="size-4 ml-1"
                                 >
                                     <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
                                         d="m19.5 8.25-7.5 7.5-7.5-7.5"
                                     />
                                 </svg>
@@ -505,42 +533,97 @@ export function PositionTableWidget(props: PositionTableWidgetProps) {
             )}
             <div className={styles.tableView}>
                 <div>
-                    <div>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Department</th>
-                                    <th>Employment Type</th>
-                                    <th>Salary Range (EUR)</th>
-                                    <th>Job Level</th>
-                                    <th>Location</th>
-                                    <th>Status</th>
+                    <table className={styles.table}>
+                        <thead className={styles.thead}>
+                            <tr>
+                                <th
+                                    className={styles.th}
+                                    onClick={() => handleSortChange('name')}
+                                >
+                                    Name{' '}
+                                    {sortBy === 'name' &&
+                                        (sortDirection === 'asc' ? '↑' : '↓')}
+                                </th>
+                                <th
+                                    className={styles.th}
+                                    onClick={() =>
+                                        handleSortChange('department')
+                                    }
+                                >
+                                    Department{' '}
+                                    {sortBy === 'department' &&
+                                        (sortDirection === 'asc' ? '↑' : '↓')}
+                                </th>
+                                <th
+                                    className={styles.th}
+                                    onClick={() =>
+                                        handleSortChange('employmentType')
+                                    }
+                                >
+                                    Employment Type{' '}
+                                    {sortBy === 'employmentType' &&
+                                        (sortDirection === 'asc' ? '↑' : '↓')}
+                                </th>
+                                <th
+                                    className={styles.th}
+                                    onClick={() =>
+                                        handleSortChange('salaryRangeMin')
+                                    }
+                                >
+                                    Salary Range (EUR){' '}
+                                    {sortBy === 'salaryRangeMin' &&
+                                        (sortDirection === 'asc' ? '↑' : '↓')}
+                                </th>
+                                <th
+                                    className={styles.th}
+                                    onClick={() => handleSortChange('jobLevel')}
+                                >
+                                    Job Level{' '}
+                                    {sortBy === 'jobLevel' &&
+                                        (sortDirection === 'asc' ? '↑' : '↓')}
+                                </th>
+                                <th
+                                    className={styles.th}
+                                    onClick={() => handleSortChange('location')}
+                                >
+                                    Location{' '}
+                                    {sortBy === 'location' &&
+                                        (sortDirection === 'asc' ? '↑' : '↓')}
+                                </th>
+                                <th
+                                    className={styles.th}
+                                    onClick={() =>
+                                        handleSortChange('positionStatus')
+                                    }
+                                >
+                                    Status{' '}
+                                    {sortBy === 'positionStatus' &&
+                                        (sortDirection === 'asc' ? '↑' : '↓')}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {sortedPositions.map((p) => (
+                                <tr key={p.id}>
+                                    <td className="underline">
+                                        <Link href={`/positions/${p.id}`}>
+                                            {p.name}
+                                        </Link>
+                                    </td>
+                                    <td>{p.department}</td>
+                                    <td>{p.employmentType}</td>
+                                    <td>
+                                        {p.salaryRangeMin}
+                                        {' - '}
+                                        {p.salaryRangeMax}
+                                    </td>
+                                    <td>{p.jobLevel}</td>
+                                    <td>{p.location}</td>
+                                    <td>{p.positionStatus}</td>
                                 </tr>
-                            </thead>
-                            {filteredPositions?.map((p) => (
-                                <tbody key={p.id}>
-                                    <tr>
-                                        <td className="underline">
-                                            <Link href={`/positions/${p.id}`}>
-                                                {p.name}
-                                            </Link>
-                                        </td>
-                                        <td>{p.department}</td>
-                                        <td>{p.employmentType}</td>
-                                        <td>
-                                            {p.salaryRangeMin}
-                                            {' - '}
-                                            {p.salaryRangeMax}
-                                        </td>
-                                        <td>{p.jobLevel}</td>
-                                        <td>{p.location}</td>
-                                        <td>{p.positionStatus}</td>
-                                    </tr>
-                                </tbody>
                             ))}
-                        </table>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

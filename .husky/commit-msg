@@ -1,6 +1,0 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
-npx echo-cli "\033[0;34m>>> Checking commit message\033[0m"
-npx commitlint --edit $1
-npx echo-cli "\033[0;32mCommit message is OK\033[0m\n"

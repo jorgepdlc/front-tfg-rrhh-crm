@@ -22,10 +22,11 @@ export interface User {
     finishedDate: string
 }
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 export function UserTableWidget(props: UserTableWidgetProps) {
     const router = useRouter()
-
     const { data, isLoading, isError } = useUsers({ size: 10 })
+
     const [searchTerm, setSearchTerm] = useState<string>('')
     const [filtersVisible, setFiltersVisible] = useState<boolean>(false)
     const [roleFilters, setRoleFilters] = useState<{
@@ -42,6 +43,8 @@ export function UserTableWidget(props: UserTableWidgetProps) {
         allowed: true,
         deleted: false,
     })
+    const [sortColumn, setSortColumn] = useState<keyof User>('name')
+    const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
 
     if (isLoading) {
         return <LoadingSpinner />
@@ -69,7 +72,25 @@ export function UserTableWidget(props: UserTableWidgetProps) {
         }))
     }
 
-    const filteredUsers = data.data?.filter((user: User) => {
+    const handleSortChange = (column: keyof User) => {
+        if (column === sortColumn) {
+            setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
+        } else {
+            setSortColumn(column)
+            setSortDirection('asc')
+        }
+    }
+
+    const sortedUsers =
+        data.data?.sort((a, b) => {
+            if (a[sortColumn] < b[sortColumn])
+                return sortDirection === 'asc' ? -1 : 1
+            if (a[sortColumn] > b[sortColumn])
+                return sortDirection === 'asc' ? 1 : -1
+            return 0
+        }) || []
+
+    const filteredUsers = sortedUsers.filter((user: User) => {
         const matchesSearchTerm =
             user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             user.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -117,7 +138,6 @@ export function UserTableWidget(props: UserTableWidgetProps) {
                                 />
                             </svg>
                         </div>
-
                         <input
                             type="text"
                             id="search"
@@ -223,13 +243,86 @@ export function UserTableWidget(props: UserTableWidgetProps) {
                             <thead>
                                 <tr>
                                     <th></th>
-                                    <th>Full Name</th>
-                                    <th>Username</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
-                                    <th>Position</th>
-                                    <th>Role</th>
-                                    <th>Date Created</th>
+                                    <th
+                                        onClick={() => handleSortChange('name')}
+                                    >
+                                        Full Name{' '}
+                                        {sortColumn === 'name'
+                                            ? sortDirection === 'asc'
+                                                ? '↑'
+                                                : '↓'
+                                            : ''}
+                                    </th>
+                                    <th
+                                        onClick={() =>
+                                            handleSortChange('username')
+                                        }
+                                    >
+                                        Username{' '}
+                                        {sortColumn === 'username'
+                                            ? sortDirection === 'asc'
+                                                ? '↑'
+                                                : '↓'
+                                            : ''}
+                                    </th>
+                                    <th
+                                        onClick={() =>
+                                            handleSortChange('email')
+                                        }
+                                    >
+                                        Email{' '}
+                                        {sortColumn === 'email'
+                                            ? sortDirection === 'asc'
+                                                ? '↑'
+                                                : '↓'
+                                            : ''}
+                                    </th>
+                                    <th
+                                        onClick={() =>
+                                            handleSortChange('phone')
+                                        }
+                                    >
+                                        Phone{' '}
+                                        {sortColumn === 'phone'
+                                            ? sortDirection === 'asc'
+                                                ? '↑'
+                                                : '↓'
+                                            : ''}
+                                    </th>
+                                    <th
+                                        onClick={() =>
+                                            handleSortChange('position')
+                                        }
+                                    >
+                                        Position{' '}
+                                        {sortColumn === 'position'
+                                            ? sortDirection === 'asc'
+                                                ? '↑'
+                                                : '↓'
+                                            : ''}
+                                    </th>
+                                    <th
+                                        onClick={() => handleSortChange('role')}
+                                    >
+                                        Role{' '}
+                                        {sortColumn === 'role'
+                                            ? sortDirection === 'asc'
+                                                ? '↑'
+                                                : '↓'
+                                            : ''}
+                                    </th>
+                                    <th
+                                        onClick={() =>
+                                            handleSortChange('startedDate')
+                                        }
+                                    >
+                                        Date Created{' '}
+                                        {sortColumn === 'startedDate'
+                                            ? sortDirection === 'asc'
+                                                ? '↑'
+                                                : '↓'
+                                            : ''}
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>

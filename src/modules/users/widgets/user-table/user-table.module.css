@@ -61,7 +61,7 @@
                     @apply font-medium border-b border-black/10;
 
                     & > tr > th {
-                        @apply px-2 py-2;
+                        @apply px-2 py-2 cursor-pointer;
                     }
                 }
 

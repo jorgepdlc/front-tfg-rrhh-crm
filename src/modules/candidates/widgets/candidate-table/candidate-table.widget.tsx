@@ -25,6 +25,7 @@ export interface Candidate {
     isAxpe: boolean
 }
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 export function CandidateTableWidget(props: CandidateTableWidgetProps) {
     const router = useRouter()
     const { data, isLoading, isError } = useCandidates({ size: 10 })
@@ -45,6 +46,14 @@ export function CandidateTableWidget(props: CandidateTableWidgetProps) {
     }>({
         axpe: false,
         notAxpe: false,
+    })
+
+    const [sortConfig, setSortConfig] = useState<{
+        key: keyof Candidate | null
+        direction: 'asc' | 'desc'
+    }>({
+        key: null,
+        direction: 'asc',
     })
 
     if (isLoading) {
@@ -75,37 +84,68 @@ export function CandidateTableWidget(props: CandidateTableWidgetProps) {
         }))
     }
 
-    const filteredCandidates = data.data?.filter((candidate: Candidate) => {
-        const matchesSearchTerm =
-            candidate.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            candidate.lastname
-                .toLowerCase()
-                .includes(searchTerm.toLowerCase()) ||
-            candidate.role.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            candidate.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            candidate.phone.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            candidate.candidateStatus
-                .toLowerCase()
-                .includes(searchTerm.toLowerCase())
+    const handleSortChange = (key: keyof Candidate) => {
+        setSortConfig((prevState) => {
+            let direction: 'asc' | 'desc' = 'asc'
+            if (prevState.key === key && prevState.direction === 'asc') {
+                direction = 'desc'
+            }
+            return { key, direction }
+        })
+    }
 
-        const matchesStatusFilters =
-            (!statusFilters.employed &&
-                !statusFilters.unemployed &&
-                !statusFilters.discarded) ||
-            (statusFilters.employed &&
-                candidate.candidateStatus === 'EMPLOYED') ||
-            (statusFilters.unemployed &&
-                candidate.candidateStatus === 'UNEMPLOYED') ||
-            (statusFilters.discarded &&
-                candidate.candidateStatus === 'DISCARDED')
-
-        const matchesAxpeFilters =
-            (!isAxpeFilters.axpe && !isAxpeFilters.notAxpe) ||
-            (isAxpeFilters.axpe && candidate.isAxpe) ||
-            (isAxpeFilters.notAxpe && !candidate.isAxpe)
-
-        return matchesSearchTerm && matchesStatusFilters && matchesAxpeFilters
+    const sortedCandidates = [...(data.data || [])].sort((a, b) => {
+        if (sortConfig.key) {
+            const order = sortConfig.direction === 'asc' ? 1 : -1
+            if (a[sortConfig.key]! < b[sortConfig.key]!) return -order
+            if (a[sortConfig.key]! > b[sortConfig.key]!) return order
+        }
+        return 0
     })
+
+    const filteredCandidates = sortedCandidates.filter(
+        (candidate: Candidate) => {
+            const matchesSearchTerm =
+                candidate.name
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase()) ||
+                candidate.lastname
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase()) ||
+                candidate.role
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase()) ||
+                candidate.email
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase()) ||
+                candidate.phone
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase()) ||
+                candidate.candidateStatus
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase())
+
+            const matchesStatusFilters =
+                (!statusFilters.employed &&
+                    !statusFilters.unemployed &&
+                    !statusFilters.discarded) ||
+                (statusFilters.employed &&
+                    candidate.candidateStatus === 'EMPLOYED') ||
+                (statusFilters.unemployed &&
+                    candidate.candidateStatus === 'UNEMPLOYED') ||
+                (statusFilters.discarded &&
+                    candidate.candidateStatus === 'DISCARDED')
+
+            const matchesAxpeFilters =
+                (!isAxpeFilters.axpe && !isAxpeFilters.notAxpe) ||
+                (isAxpeFilters.axpe && candidate.isAxpe) ||
+                (isAxpeFilters.notAxpe && !candidate.isAxpe)
+
+            return (
+                matchesSearchTerm && matchesStatusFilters && matchesAxpeFilters
+            )
+        }
+    )
 
     return (
         <div data-testid="candidate-table-widget" className={styles.container}>
@@ -195,181 +235,231 @@ export function CandidateTableWidget(props: CandidateTableWidgetProps) {
             </div>
             {filtersVisible && (
                 <div className={styles.filters}>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger
-                            className={`mr-2 ${
-                                statusFilters.discarded ||
-                                statusFilters.employed ||
-                                statusFilters.unemployed
-                                    ? styles.active
-                                    : ''
-                            }`}
-                        >
-                            <button className="flex items-center">
-                                Employment Type
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke-width="1.5"
-                                    stroke="currentColor"
-                                    className="size-4 ml-1"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                                    />
-                                </svg>
-                            </button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className={styles.filterContent}>
-                            <DropdownMenuItem className="flex justify-center">
+                    <div className={styles.dropdown}>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger>
                                 <button
                                     type="button"
-                                    className={`${styles.filterOption} ${
-                                        statusFilters.employed
-                                            ? styles.active
-                                            : ''
-                                    }`}
-                                    onClick={() =>
-                                        handleStatusFilterChange('employed')
-                                    }
+                                    className={styles.dropdownButton}
                                 >
-                                    Employed
+                                    Employment Type
                                 </button>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="flex justify-center">
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent
+                                align="end"
+                                className={styles.dropdownContent}
+                            >
+                                <DropdownMenuItem
+                                    className={styles.dropdownItem}
+                                >
+                                    <button
+                                        type="button"
+                                        className={`${styles.filterOption} ${
+                                            statusFilters.employed
+                                                ? styles.active
+                                                : ''
+                                        }`}
+                                        onClick={() =>
+                                            handleStatusFilterChange('employed')
+                                        }
+                                    >
+                                        Employed
+                                    </button>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    className={styles.dropdownItem}
+                                >
+                                    <button
+                                        type="button"
+                                        className={`${styles.filterOption} ${
+                                            statusFilters.unemployed
+                                                ? styles.active
+                                                : ''
+                                        }`}
+                                        onClick={() =>
+                                            handleStatusFilterChange(
+                                                'unemployed'
+                                            )
+                                        }
+                                    >
+                                        Unemployed
+                                    </button>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    className={styles.dropdownItem}
+                                >
+                                    <button
+                                        type="button"
+                                        className={`${styles.filterOption} ${
+                                            statusFilters.discarded
+                                                ? styles.active
+                                                : ''
+                                        }`}
+                                        onClick={() =>
+                                            handleStatusFilterChange(
+                                                'discarded'
+                                            )
+                                        }
+                                    >
+                                        Discarded
+                                    </button>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
+                    <div className={styles.dropdown}>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger>
                                 <button
                                     type="button"
-                                    className={`${styles.filterOption} ${
-                                        statusFilters.unemployed
-                                            ? styles.active
-                                            : ''
-                                    }`}
-                                    onClick={() =>
-                                        handleStatusFilterChange('unemployed')
-                                    }
+                                    className={styles.dropdownButton}
                                 >
-                                    Unemployed
+                                    Is Axpe
                                 </button>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="flex justify-center">
-                                <button
-                                    type="button"
-                                    className={`${styles.filterOption} ${
-                                        statusFilters.discarded
-                                            ? styles.active
-                                            : ''
-                                    }`}
-                                    onClick={() =>
-                                        handleStatusFilterChange('discarded')
-                                    }
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent
+                                align="end"
+                                className={styles.dropdownContent}
+                            >
+                                <DropdownMenuItem
+                                    className={styles.dropdownItem}
                                 >
-                                    Discarded
-                                </button>
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger
-                            className={`mr-2 ${
-                                isAxpeFilters.axpe || isAxpeFilters.notAxpe
-                                    ? styles.active
-                                    : ''
-                            }`}
-                        >
-                            <button className="flex items-center">
-                                Is Axpe
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke-width="1.5"
-                                    stroke="currentColor"
-                                    className="size-4 ml-1"
+                                    <button
+                                        type="button"
+                                        className={`${styles.filterOption} ${
+                                            isAxpeFilters.axpe
+                                                ? styles.active
+                                                : ''
+                                        }`}
+                                        onClick={() =>
+                                            handleAxpeFilterChange('axpe')
+                                        }
+                                    >
+                                        Yes
+                                    </button>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    className={styles.dropdownItem}
                                 >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                                    />
-                                </svg>
-                            </button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className={styles.filterContent}>
-                            <DropdownMenuItem className="flex justify-center">
-                                <button
-                                    type="button"
-                                    className={`${styles.filterOption} ${
-                                        isAxpeFilters.axpe ? styles.active : ''
-                                    }`}
-                                    onClick={() =>
-                                        handleAxpeFilterChange('axpe')
-                                    }
-                                >
-                                    Yes
-                                </button>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="flex justify-center">
-                                <button
-                                    type="button"
-                                    className={`${styles.filterOption} ${
-                                        isAxpeFilters.notAxpe
-                                            ? styles.active
-                                            : ''
-                                    }`}
-                                    onClick={() =>
-                                        handleAxpeFilterChange('notAxpe')
-                                    }
-                                >
-                                    No
-                                </button>
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                                    <button
+                                        type="button"
+                                        className={`${styles.filterOption} ${
+                                            isAxpeFilters.notAxpe
+                                                ? styles.active
+                                                : ''
+                                        }`}
+                                        onClick={() =>
+                                            handleAxpeFilterChange('notAxpe')
+                                        }
+                                    >
+                                        No
+                                    </button>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
                 </div>
             )}
             <div className={styles.tableView}>
                 <div>
-                    <div>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th scope="col">Full Name</th>
-                                    <th scope="col">Role</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Phone</th>
-                                    <th scope="col">Candidate Status</th>
-                                    <th scope="col">In Axpe</th>
-                                </tr>
-                            </thead>
+                    <table className={styles.table}>
+                        <thead className={styles.thead}>
+                            <tr>
+                                <th
+                                    className={styles.th}
+                                    scope="col"
+                                    onClick={() => handleSortChange('name')}
+                                >
+                                    Full Name{' '}
+                                    {sortConfig.key === 'name' &&
+                                        (sortConfig.direction === 'asc'
+                                            ? '↑'
+                                            : '↓')}
+                                </th>
+                                <th
+                                    className={styles.th}
+                                    scope="col"
+                                    onClick={() => handleSortChange('role')}
+                                >
+                                    Role{' '}
+                                    {sortConfig.key === 'role' &&
+                                        (sortConfig.direction === 'asc'
+                                            ? '↑'
+                                            : '↓')}
+                                </th>
+                                <th
+                                    className={styles.th}
+                                    scope="col"
+                                    onClick={() => handleSortChange('email')}
+                                >
+                                    Email{' '}
+                                    {sortConfig.key === 'email' &&
+                                        (sortConfig.direction === 'asc'
+                                            ? '↑'
+                                            : '↓')}
+                                </th>
+                                <th
+                                    className={styles.th}
+                                    scope="col"
+                                    onClick={() => handleSortChange('phone')}
+                                >
+                                    Phone{' '}
+                                    {sortConfig.key === 'phone' &&
+                                        (sortConfig.direction === 'asc'
+                                            ? '↑'
+                                            : '↓')}
+                                </th>
+                                <th
+                                    className={styles.th}
+                                    scope="col"
+                                    onClick={() =>
+                                        handleSortChange('candidateStatus')
+                                    }
+                                >
+                                    Candidate Status{' '}
+                                    {sortConfig.key === 'candidateStatus' &&
+                                        (sortConfig.direction === 'asc'
+                                            ? '↑'
+                                            : '↓')}
+                                </th>
+                                <th
+                                    className={styles.th}
+                                    scope="col"
+                                    onClick={() => handleSortChange('isAxpe')}
+                                >
+                                    In Axpe{' '}
+                                    {sortConfig.key === 'isAxpe' &&
+                                        (sortConfig.direction === 'asc'
+                                            ? '↑'
+                                            : '↓')}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
                             {filteredCandidates?.map((c) => (
-                                <tbody key={c.id}>
-                                    <tr>
-                                        <td className="underline">
-                                            <Link href={`/candidates/${c.id}`}>
-                                                {c.name} {c.lastname}
-                                            </Link>
-                                        </td>
-                                        <td>
-                                            <Link href={`/candidates/${c.id}`}>
-                                                {c.role}
-                                            </Link>
-                                        </td>
-                                        <td>
-                                            <Link href={`/candidates/${c.id}`}>
-                                                {c.email}
-                                            </Link>
-                                        </td>
-                                        <td>{c.phone}</td>
-                                        <td>{c.candidateStatus}</td>
-                                        <td>{c.isAxpe ? 'Yes' : 'No'}</td>
-                                    </tr>
-                                </tbody>
+                                <tr key={c.id}>
+                                    <td className="underline">
+                                        <Link href={`/candidates/${c.id}`}>
+                                            {c.name} {c.lastname}
+                                        </Link>
+                                    </td>
+                                    <td>
+                                        <Link href={`/candidates/${c.id}`}>
+                                            {c.role}
+                                        </Link>
+                                    </td>
+                                    <td>
+                                        <Link href={`/candidates/${c.id}`}>
+                                            {c.email}
+                                        </Link>
+                                    </td>
+                                    <td>{c.phone}</td>
+                                    <td>{c.candidateStatus}</td>
+                                    <td>{c.isAxpe ? 'Yes' : 'No'}</td>
+                                </tr>
                             ))}
-                        </table>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
