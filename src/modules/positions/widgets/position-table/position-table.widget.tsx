@@ -105,12 +105,10 @@ export function PositionTableWidget(props: PositionTableWidgetProps) {
 
     const handleSortChange = (column: string) => {
         if (sortBy === column) {
-            // Toggle sort direction if the same column is clicked
             setSortDirection((prevDirection) =>
                 prevDirection === 'asc' ? 'desc' : 'asc'
             )
         } else {
-            // Set new column and default to ascending order
             setSortBy(column)
             setSortDirection('asc')
         }
