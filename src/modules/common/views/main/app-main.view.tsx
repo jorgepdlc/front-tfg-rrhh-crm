@@ -1,6 +1,5 @@
 import React from 'react'
 import styles from './app-main.module.css'
-import Link from 'next/link'
 
 export function AppMainView() {
     return (
@@ -55,12 +54,6 @@ export function AppMainView() {
                             Manage the personal and professional details of
                             candidates efficiently.
                         </p>
-                        <Link
-                            href="/candidates"
-                            className="text-blue-600 hover:underline"
-                        >
-                            Go to Candidates
-                        </Link>
                     </div>
                     <div className="p-6 bg-white rounded-lg shadow-md">
                         <h3 className="text-xl font-bold mb-2">
@@ -70,12 +63,6 @@ export function AppMainView() {
                             Create, modify, and delete job positions, and assign
                             candidates to these roles.
                         </p>
-                        <Link
-                            href="/positions"
-                            className="text-blue-600 hover:underline"
-                        >
-                            Go to Positions
-                        </Link>
                     </div>
                     <div className="p-6 bg-white rounded-lg shadow-md">
                         <h3 className="text-xl font-bold mb-2">
@@ -85,12 +72,6 @@ export function AppMainView() {
                             Schedule and manage meetings, interviews, and other
                             recruitment-related events.
                         </p>
-                        <Link
-                            href="/events"
-                            className="text-blue-600 hover:underline"
-                        >
-                            Go to Events
-                        </Link>
                     </div>
                 </div>
             </section>
