@@ -43,7 +43,7 @@ export function AppMainView() {
                 className="bg-gray-100 p-8 m-4 rounded-lg shadow-lg"
             >
                 <h2 className="text-3xl font-extrabold text-gray-800 mb-6">
-                    Functional Objectives
+                    Functional Characteristics
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="p-6 bg-white rounded-lg shadow-md">
