@@ -11,7 +11,8 @@ export default withAuth({
             return (
                 pathname.startsWith('/_next/') ||
                 pathname.startsWith('/favicon.ico') ||
-                pathname.startsWith('/assets/')
+                pathname.startsWith('/assets/') ||
+                pathname === '/'
             )
         },
     },
