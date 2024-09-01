@@ -170,7 +170,7 @@ export function AddCandidateWidget(props: AddCandidateWidgetProps) {
                                                     scope="col"
                                                     className="py-2"
                                                 >
-                                                    Email
+                                                    Role
                                                 </th>
                                             </tr>
                                         </thead>
@@ -189,7 +189,7 @@ export function AddCandidateWidget(props: AddCandidateWidgetProps) {
                                                         {c.name} {c.lastname}
                                                     </th>
                                                     <td className="text-sm">
-                                                        {c.email}
+                                                        {c.role}
                                                     </td>
                                                 </tr>
                                             </tbody>

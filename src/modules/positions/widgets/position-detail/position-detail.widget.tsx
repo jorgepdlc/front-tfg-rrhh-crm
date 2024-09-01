@@ -72,6 +72,11 @@ export function PositionDetailWidget(props: PositionDetailWidgetProps) {
             ) as HTMLInputElement
         ).value
 
+        if (salaryRangeMin > salaryRangeMax) {
+            alert('Min salary must be less than max salary')
+            return
+        }
+
         try {
             const success = await positionApi.update({
                 updatedResource: {
@@ -289,7 +294,7 @@ export function PositionDetailWidget(props: PositionDetailWidgetProps) {
                                 </label>
                             </div>
                             <div className="flex justify-between items-center">
-                                <div>
+                                <div className="w-5/12">
                                     <label>
                                         Min salary (EUR): *
                                         <input
@@ -308,8 +313,10 @@ export function PositionDetailWidget(props: PositionDetailWidgetProps) {
                                         />
                                     </label>
                                 </div>
-                                <div className="px-2">-</div>
-                                <div>
+                                <div className="w-1/12 flex items-center justify-center">
+                                    -
+                                </div>
+                                <div className="w-5/12">
                                     <label>
                                         Max Salary (EUR): *
                                         <input

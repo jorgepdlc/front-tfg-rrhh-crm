@@ -30,6 +30,8 @@ export type UserPatch = {
     lastname?: string
     phone?: string
     position?: string
+    username?: string
+    email?: string
     password?: string
     role?: 'ADMIN' | 'USER'
     finishedDate?: string

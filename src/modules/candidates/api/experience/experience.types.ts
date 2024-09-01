@@ -31,7 +31,7 @@ export type ExperienceUpdate = {
     position: string
     company: string
     startedDate: string
-    finishedDate: string
+    finishedDate: string | null
 }
 
 export type ExperienceId = string | number

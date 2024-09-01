@@ -5,6 +5,8 @@ import { LoadingSpinner } from '@/common/components/ui/loading-spinner'
 import { IsError } from '@/common/components/ui/is-error'
 import { AvatarFallback, AvatarRoot } from '@/common/components/ui/avatar'
 import { useRouter } from 'next/navigation'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 export type UserDetailFormWidgetProps = { userId: UserId }
 
@@ -40,24 +42,31 @@ export function UserDetailFormWidget(props: UserDetailFormWidgetProps) {
             ) as HTMLInputElement
         ).value
 
-        const success = await userApi.patch({
-            updatedResource: {
-                name: name,
-                lastname: lastname,
-                phone: phone,
-                position: position,
-                role: role,
-            },
-            resourceId: props.userId,
-        })
+        try {
+            const success = await userApi.patch({
+                updatedResource: {
+                    name: name,
+                    lastname: lastname,
+                    phone: phone,
+                    position: position,
+                    role: role,
+                },
+                resourceId: props.userId,
+            })
 
-        if (success) {
-            setIsEditing(false)
-            try {
-                await refetch()
-            } catch (error) {
-                console.error('Error refetching user', error)
+            if (success) {
+                setIsEditing(false)
+                try {
+                    await refetch()
+                } catch (error) {
+                    console.error('Error refetching user', error)
+                }
             }
+        } catch (error) {
+            toast.error('Username or email already in use'),
+                {
+                    position: 'bottom-right',
+                }
         }
     }
 
@@ -97,10 +106,40 @@ export function UserDetailFormWidget(props: UserDetailFormWidgetProps) {
             if (success) {
                 setIsEditing(false)
                 await refetch()
-                alert('Contraseña cambiada correctamente.')
+                alert('Password updated.')
             }
         } else {
-            alert('Las contraseñas no coinciden. Inténtalo de nuevo.')
+            alert('Passwords dont match, try again.')
+        }
+    }
+
+    const handleChangeUsernameEmail = async () => {
+        const newUsername = prompt('Introduce new Username:')
+        const newEmail = prompt('Introduce new email:')
+
+        if (newUsername === null || newEmail === null) {
+            toast.error('Username or email cannot be empty')
+        } else {
+            try {
+                const success = await userApi.patch({
+                    updatedResource: {
+                        username: newUsername,
+                        email: newEmail,
+                    },
+                    resourceId: props.userId,
+                })
+
+                if (success) {
+                    setIsEditing(false)
+                    await refetch()
+                    alert('User and email updated.')
+                }
+            } catch (error) {
+                toast.error('Username or email already in use'),
+                    {
+                        position: 'bottom-right',
+                    }
+            }
         }
     }
 
@@ -396,6 +435,13 @@ export function UserDetailFormWidget(props: UserDetailFormWidgetProps) {
                             <button
                                 type="button"
                                 className={`mr-2 ${styles.button}`}
+                                onClick={handleChangeUsernameEmail}
+                            >
+                                Change Username and Email
+                            </button>
+                            <button
+                                type="button"
+                                className={`mr-2 ${styles.button}`}
                                 onClick={handleChangePasswordButton}
                             >
                                 Change Password
@@ -425,6 +471,7 @@ export function UserDetailFormWidget(props: UserDetailFormWidgetProps) {
                     )}
                 </div>
             </div>
+            <ToastContainer />
         </div>
     )
 }

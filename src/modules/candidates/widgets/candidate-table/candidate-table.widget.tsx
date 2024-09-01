@@ -235,131 +235,143 @@ export function CandidateTableWidget(props: CandidateTableWidgetProps) {
             </div>
             {filtersVisible && (
                 <div className={styles.filters}>
-                    <div className={styles.dropdown}>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger
+                            className={`mr-2 ${
+                                statusFilters.employed ||
+                                statusFilters.unemployed ||
+                                statusFilters.discarded
+                                    ? styles.active
+                                    : ''
+                            }`}
+                        >
+                            <button className="flex items-center">
+                                Candidate Status
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth="1.5"
+                                    stroke="currentColor"
+                                    className="size-4 ml-1"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                                    />
+                                </svg>
+                            </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className={styles.filterContent}>
+                            <DropdownMenuItem className="flex justify-center">
                                 <button
                                     type="button"
-                                    className={styles.dropdownButton}
+                                    className={`${styles.filterOption} ${
+                                        statusFilters.employed
+                                            ? styles.active
+                                            : ''
+                                    }`}
+                                    onClick={() =>
+                                        handleStatusFilterChange('employed')
+                                    }
                                 >
-                                    Candidate Status
+                                    Employed
                                 </button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent
-                                align="end"
-                                className={styles.dropdownContent}
-                            >
-                                <DropdownMenuItem
-                                    className={styles.dropdownItem}
-                                >
-                                    <button
-                                        type="button"
-                                        className={`${styles.filterOption} ${
-                                            statusFilters.employed
-                                                ? styles.active
-                                                : ''
-                                        }`}
-                                        onClick={() =>
-                                            handleStatusFilterChange('employed')
-                                        }
-                                    >
-                                        Employed
-                                    </button>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    className={styles.dropdownItem}
-                                >
-                                    <button
-                                        type="button"
-                                        className={`${styles.filterOption} ${
-                                            statusFilters.unemployed
-                                                ? styles.active
-                                                : ''
-                                        }`}
-                                        onClick={() =>
-                                            handleStatusFilterChange(
-                                                'unemployed'
-                                            )
-                                        }
-                                    >
-                                        Unemployed
-                                    </button>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    className={styles.dropdownItem}
-                                >
-                                    <button
-                                        type="button"
-                                        className={`${styles.filterOption} ${
-                                            statusFilters.discarded
-                                                ? styles.active
-                                                : ''
-                                        }`}
-                                        onClick={() =>
-                                            handleStatusFilterChange(
-                                                'discarded'
-                                            )
-                                        }
-                                    >
-                                        Discarded
-                                    </button>
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </div>
-                    <div className={styles.dropdown}>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="flex justify-center">
                                 <button
                                     type="button"
-                                    className={styles.dropdownButton}
+                                    className={`${styles.filterOption} ${
+                                        statusFilters.unemployed
+                                            ? styles.active
+                                            : ''
+                                    }`}
+                                    onClick={() =>
+                                        handleStatusFilterChange('unemployed')
+                                    }
                                 >
-                                    Is Axpe
+                                    Unemployed
                                 </button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent
-                                align="end"
-                                className={styles.dropdownContent}
-                            >
-                                <DropdownMenuItem
-                                    className={styles.dropdownItem}
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="flex justify-center">
+                                <button
+                                    type="button"
+                                    className={`${styles.filterOption} ${
+                                        statusFilters.discarded
+                                            ? styles.active
+                                            : ''
+                                    }`}
+                                    onClick={() =>
+                                        handleStatusFilterChange('discarded')
+                                    }
                                 >
-                                    <button
-                                        type="button"
-                                        className={`${styles.filterOption} ${
-                                            isAxpeFilters.axpe
-                                                ? styles.active
-                                                : ''
-                                        }`}
-                                        onClick={() =>
-                                            handleAxpeFilterChange('axpe')
-                                        }
-                                    >
-                                        Yes
-                                    </button>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    className={styles.dropdownItem}
+                                    Discarded
+                                </button>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+
+                    <DropdownMenu>
+                        <DropdownMenuTrigger
+                            className={`mr-2 ${
+                                isAxpeFilters.axpe || isAxpeFilters.notAxpe
+                                    ? styles.active
+                                    : ''
+                            }`}
+                        >
+                            <button className="flex items-center">
+                                Is Axpe
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth="1.5"
+                                    stroke="currentColor"
+                                    className="size-4 ml-1"
                                 >
-                                    <button
-                                        type="button"
-                                        className={`${styles.filterOption} ${
-                                            isAxpeFilters.notAxpe
-                                                ? styles.active
-                                                : ''
-                                        }`}
-                                        onClick={() =>
-                                            handleAxpeFilterChange('notAxpe')
-                                        }
-                                    >
-                                        No
-                                    </button>
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </div>
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                                    />
+                                </svg>
+                            </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className={styles.filterContent}>
+                            <DropdownMenuItem className="flex justify-center">
+                                <button
+                                    type="button"
+                                    className={`${styles.filterOption} ${
+                                        isAxpeFilters.axpe ? styles.active : ''
+                                    }`}
+                                    onClick={() =>
+                                        handleAxpeFilterChange('axpe')
+                                    }
+                                >
+                                    Yes
+                                </button>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="flex justify-center">
+                                <button
+                                    type="button"
+                                    className={`${styles.filterOption} ${
+                                        isAxpeFilters.notAxpe
+                                            ? styles.active
+                                            : ''
+                                    }`}
+                                    onClick={() =>
+                                        handleAxpeFilterChange('notAxpe')
+                                    }
+                                >
+                                    No
+                                </button>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
             )}
+
             <div className={styles.tableView}>
                 <div>
                     <table className={styles.table}>

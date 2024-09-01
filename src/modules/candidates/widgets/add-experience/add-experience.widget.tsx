@@ -74,7 +74,9 @@ export function AddExperienceWidget(props: AddExperienceWidgetProps) {
                 position: position,
                 company: company,
                 startedDate: startedDate + dateTimeSuffix,
-                finishedDate: finishedDate + dateTimeSuffix,
+                finishedDate: finishedDate
+                    ? finishedDate + dateTimeSuffix
+                    : null,
             },
             candidateId: props.candidateId,
         })
@@ -355,7 +357,7 @@ export function AddExperienceWidget(props: AddExperienceWidgetProps) {
                                         />
                                     </label>
                                     <label>
-                                        Finished Date: *
+                                        Finished Date:
                                         <input
                                             className={`${
                                                 props.isEditing
@@ -364,13 +366,16 @@ export function AddExperienceWidget(props: AddExperienceWidgetProps) {
                                             }`}
                                             type="date"
                                             name="expEndDate"
-                                            defaultValue={exp.finishedDate.slice(
-                                                0,
-                                                10
-                                            )}
+                                            defaultValue={
+                                                exp.finishedDate
+                                                    ? exp.finishedDate.slice(
+                                                          0,
+                                                          10
+                                                      )
+                                                    : ''
+                                            }
                                             readOnly={!props.isEditing}
                                             onChange={() => setIsModified(true)}
-                                            required
                                         />
                                     </label>
                                     {!props.isEditing && (

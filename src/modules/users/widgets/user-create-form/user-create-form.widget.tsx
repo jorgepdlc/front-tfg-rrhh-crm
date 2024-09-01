@@ -83,21 +83,27 @@ export function UserCreateFormWidget(props: UserCreateFormWidgetProps) {
             return
         }
 
-        const success = await registerApi.create({
-            newResource: {
-                name: name,
-                lastname: lastname,
-                email: email,
-                phone: phone,
-                position: position,
-                username: username,
-                password: password,
-                role: role,
-            },
-        })
+        try {
+            const success = await registerApi.create({
+                newResource: {
+                    name: name,
+                    lastname: lastname,
+                    email: email,
+                    phone: phone,
+                    position: position,
+                    username: username,
+                    password: password,
+                    role: role,
+                },
+            })
 
-        if (success) {
-            router.push('/users')
+            if (success) {
+                router.push('/users')
+            }
+        } catch (error) {
+            toast.error('Username or email already in use', {
+                position: toastPosition,
+            })
         }
     }
 
