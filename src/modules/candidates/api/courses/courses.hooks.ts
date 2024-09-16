@@ -10,7 +10,7 @@ export const useCoursess = Pagination.makePaginationHook({
     useApiContext: useApiContext,
     // TODO: Connect getCount and getPageData with the list response data
     getCount: (data) => data.count,
-    getPageData: (data) => data.results,
+    getPageData: (data) => data.data,
 })
 
 export const useCourses = (params: CoursesGetApiParams) => {

@@ -1,9 +1,9 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import type { StoryObj } from '@storybook/react'
 import { expect } from '@storybook/jest'
 import { within } from '@storybook/testing-library'
 import { Icons } from './icons.component'
 
-const meta: Meta<typeof Icons> = {
+const meta = {
     title: 'Icons',
     component: Icons,
     argTypes: {},

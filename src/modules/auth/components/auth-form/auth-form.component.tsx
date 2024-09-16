@@ -26,6 +26,10 @@ export function AuthForm({ className, onSubmit, ...props }: AuthFormProps) {
                 message: 'Password must contain at least 4 characters',
             }),
         }),
+        defaultValues: {
+            username: '',
+            password: '',
+        },
         onSubmit: async (data) => {
             try {
                 const error = await onSubmit(data)

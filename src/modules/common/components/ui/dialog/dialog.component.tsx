@@ -18,12 +18,8 @@ export const Trigger = React.forwardRef<
 export const DialogTrigger = Trigger
 Trigger.displayName = 'DialogTrigger'
 
-const Portal = ({
-    className,
-    children,
-    ...props
-}: DialogPrimitive.DialogPortalProps) => (
-    <DialogPrimitive.Portal className={cn(styles.portal, className)} {...props}>
+const Portal = ({ children, ...props }: DialogPrimitive.DialogPortalProps) => (
+    <DialogPrimitive.Portal {...props}>
         <div className={styles.portal}>{children}</div>
     </DialogPrimitive.Portal>
 )

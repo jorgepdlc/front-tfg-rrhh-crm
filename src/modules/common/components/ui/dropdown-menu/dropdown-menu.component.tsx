@@ -91,7 +91,7 @@ export const CheckboxItem = React.forwardRef<
     > & {
         Icon: Component<{ className: string }>
     }
->(({ className, children, Icon, checked, ...props }, ref) => (
+>(({ className, children, checked, ...props }, ref) => (
     <DropdownMenuPrimitive.CheckboxItem
         ref={ref}
         className={cn(styles.checkboxItem, className)}
@@ -99,9 +99,7 @@ export const CheckboxItem = React.forwardRef<
         {...props}
     >
         <span className={styles.checkboxItem}>
-            <DropdownMenuPrimitive.ItemIndicator>
-                <Icon className={styles.icon} />
-            </DropdownMenuPrimitive.ItemIndicator>
+            <DropdownMenuPrimitive.ItemIndicator></DropdownMenuPrimitive.ItemIndicator>
         </span>
         {children}
     </DropdownMenuPrimitive.CheckboxItem>
@@ -114,16 +112,14 @@ export const RadioItem = React.forwardRef<
     React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.RadioItem> & {
         Icon: Component<{ className: string }>
     }
->(({ className, children, Icon, ...props }, ref) => (
+>(({ className, children, ...props }, ref) => (
     <DropdownMenuPrimitive.RadioItem
         ref={ref}
         className={cn(styles.radioItem, className)}
         {...props}
     >
         <span className={styles.radioItemWrapper}>
-            <DropdownMenuPrimitive.ItemIndicator>
-                <Icon className={styles.icon} />
-            </DropdownMenuPrimitive.ItemIndicator>
+            <DropdownMenuPrimitive.ItemIndicator></DropdownMenuPrimitive.ItemIndicator>
         </span>
         {children}
     </DropdownMenuPrimitive.RadioItem>

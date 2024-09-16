@@ -18,10 +18,13 @@ export const LoggedIn: Story = {
         <AuthProvider
             session={{
                 user: {
-                    email: 'example@pibone.com',
-                    name: 'Dani Peña Iglesias',
+                    id: 1,
+                    role: 'USER',
+                    email: 'example@email.com',
+                    name: 'Jorge Prieto de la Cruz',
                     image: 'https://github.com/pibone.png',
                 },
+                expires: '2022-12-31T23:59:59Z',
             }}
         >
             <AccountWidget {...p} />

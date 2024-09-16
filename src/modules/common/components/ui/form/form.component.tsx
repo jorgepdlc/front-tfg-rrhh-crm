@@ -10,13 +10,11 @@ import {
     UseFormProps,
     SubmitErrorHandler,
     useFormContext,
-    DeepPartial,
 } from 'react-hook-form'
 import cn from 'classnames'
 import { Label as UILabel } from '../label'
 import styles from './form.module.css'
 import { ZodType } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { Input as UIInput } from '../input'
 
 export type FormProps<
@@ -119,8 +117,6 @@ export function useZodForm<
     TFormSchema extends FieldValues = FieldValues,
     TContext = any
 >({
-    defaultValues,
-    schema,
     onSubmit,
     onFormError: onError = () => {},
     ...props
@@ -130,11 +126,7 @@ export function useZodForm<
     onSubmit: UseZodFormSubmitHandler<TFormSchema>
     onFormError?: SubmitErrorHandler<TFormSchema>
 }) {
-    const form = useForm<TFormSchema, TContext>({
-        defaultValues: defaultValues as DeepPartial<TFormSchema>,
-        ...props,
-        resolver: zodResolver(schema),
-    })
+    const form = useForm<TFormSchema, TContext>({})
 
     return useMemo(
         () => ({

@@ -6,10 +6,8 @@ import styles from './popover.module.css'
 export const Root = React.forwardRef<
     typeof PopoverPrimitive.Root,
     ComponentPropsWithoutRef<typeof PopoverPrimitive.Root>
->(({ children, ...props }, ref) => (
-    <PopoverPrimitive.Root ref={ref} {...props}>
-        {children}
-    </PopoverPrimitive.Root>
+>(({ children, ...props }) => (
+    <PopoverPrimitive.Root {...props}>{children}</PopoverPrimitive.Root>
 ))
 export const PopoverRoot = Root
 Root.displayName = 'PopoverRoot'
@@ -17,10 +15,9 @@ Root.displayName = 'PopoverRoot'
 export const Trigger = React.forwardRef<
     typeof PopoverPrimitive.Trigger,
     ComponentPropsWithoutRef<typeof PopoverPrimitive.Trigger>
->(({ className, ...props }, ref) => (
+>(({ className, ...props }) => (
     <PopoverPrimitive.Trigger
         data-testid="popover"
-        ref={ref}
         className={cn(styles.trigger, className)}
         {...props}
     />

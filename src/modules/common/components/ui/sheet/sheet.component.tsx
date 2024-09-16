@@ -8,9 +8,7 @@ import styles from './sheet.module.css'
 export const Root = React.forwardRef<
     React.ElementRef<typeof SheetPrimitive.Root>,
     React.ComponentPropsWithoutRef<typeof SheetPrimitive.Root>
->((props, ref) => (
-    <SheetPrimitive.Root ref={ref} data-testid="sheet" {...props} />
-))
+>((props) => <SheetPrimitive.Root data-testid="sheet" {...props} />)
 export const SheetRoot = Root
 Root.displayName = SheetPrimitive.Root.displayName
 

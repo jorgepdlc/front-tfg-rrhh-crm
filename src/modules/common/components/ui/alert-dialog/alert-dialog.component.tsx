@@ -7,10 +7,8 @@ import styles from './alert-dialog.module.css'
 export const Root = React.forwardRef<
     React.ElementRef<typeof AlertDialogPrimitive.Root>,
     React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Root>
->(({ children, ...props }, ref) => (
-    <AlertDialogPrimitive.Root ref={ref} {...props}>
-        {children}
-    </AlertDialogPrimitive.Root>
+>(({ children, ...props }) => (
+    <AlertDialogPrimitive.Root {...props}>{children}</AlertDialogPrimitive.Root>
 ))
 export const AlertDialogRoot = Root
 Root.displayName = 'AlertDialogRoot'
@@ -31,11 +29,10 @@ export const AlertDialogTrigger = Trigger
 Trigger.displayName = 'AlertDialogTrigger'
 
 const AlertDialogPortal = ({
-    className,
     children,
     ...props
 }: AlertDialogPrimitive.AlertDialogPortalProps) => (
-    <AlertDialogPrimitive.Portal className={cn(className)} {...props}>
+    <AlertDialogPrimitive.Portal {...props}>
         <div className={styles.portal}>{children}</div>
     </AlertDialogPrimitive.Portal>
 )

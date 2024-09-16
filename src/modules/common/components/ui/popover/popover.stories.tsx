@@ -3,7 +3,6 @@ import { expect } from '@storybook/jest'
 import { within } from '@storybook/testing-library'
 import * as Popover from './popover.component'
 import { Button } from '../button'
-import { Badge } from '../badge'
 
 const meta: Meta<typeof Popover.Root> = {
     title: 'Popover',
@@ -21,10 +20,7 @@ export const Default: Story = {
                 <Button>Abrir</Button>
             </Popover.Trigger>
             <Popover.Content asChild>
-                <div className="flex gap-1">
-                    <Badge>Contenido</Badge>
-                    Este es el contenido
-                </div>
+                <div className="flex gap-1">Este es el contenido</div>
             </Popover.Content>
         </Popover.Root>
     ),

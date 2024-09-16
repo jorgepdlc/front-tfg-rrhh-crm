@@ -10,12 +10,9 @@ export const useParticipants = Pagination.makePaginationHook({
     useApiContext: useApiContext,
     // TODO: Connect getCount and getPageData with the list response data
     getCount: (data) => data.count,
-    getPageData: (data) => data.results,
+    getPageData: (data) => data.data,
 })
 
 export const useParticipant = (params: ParticipantGetApiParams) => {
-    return useQuery(
-        ['participant-api-get', params] as [string, typeof params],
-        ({ queryKey: [_key, params] }) => participantApi.get(params)
-    )
+    return useQuery(['participant-api-get', params] as [string, typeof params])
 }

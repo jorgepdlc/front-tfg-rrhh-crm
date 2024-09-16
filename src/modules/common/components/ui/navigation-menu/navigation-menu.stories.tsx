@@ -4,6 +4,7 @@ import { within } from '@storybook/testing-library'
 import * as NavigationMenu from './navigation-menu.component'
 import cn from 'classnames'
 import * as Avatar from '../avatar'
+import React from 'react'
 
 const meta: Meta<typeof NavigationMenu.Root> = {
     title: 'NavigationMenu',
@@ -107,7 +108,7 @@ export const Complex: Story = {
                     </NavigationMenu.Content>
                 </NavigationMenu.Item>
                 <NavigationMenu.Item>
-                    <a href="/docs" legacyBehavior passHref>
+                    <a href="/docs">
                         <NavigationMenu.Link>Documentation</NavigationMenu.Link>
                     </a>
                 </NavigationMenu.Item>

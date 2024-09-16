@@ -25,9 +25,10 @@ import {
     Instagram,
     Youtube,
 } from 'lucide-react'
+import { SVGProps } from 'react'
 
 export const Icons = {
-    logo: (props) => (
+    logo: (props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) => (
         <svg
             viewBox="0 0 24 24"
             fill="currentColor"
