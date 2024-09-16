@@ -17,7 +17,16 @@ export function AddLinkWidget(props: AddLinkWidgetProps) {
         size: 10,
     })
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const [isModified, setIsModified] = useState(false)
+    const [modifiedLinks, setModifiedLinks] = useState<{
+        [key: LinksId]: boolean
+    }>({})
+
+    const handleLinkModification = (linkId: LinksId) => {
+        setModifiedLinks((prev) => ({
+            ...prev,
+            [linkId]: true,
+        }))
+    }
 
     const handleOpenModal = () => {
         setIsModalOpen(true)
@@ -99,7 +108,10 @@ export function AddLinkWidget(props: AddLinkWidgetProps) {
 
         if (success) {
             await refetch()
-            setIsModified(false)
+            setModifiedLinks((prev) => ({
+                ...prev,
+                [linkId]: false,
+            }))
         } else {
             alert('Failed to update link')
         }
@@ -127,29 +139,6 @@ export function AddLinkWidget(props: AddLinkWidgetProps) {
                             Add
                         </button>
                     )}
-                {isModified && (
-                    <button
-                        type="submit"
-                        form="linkForm"
-                        className={`ml-2 ${styles.button}`}
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke-width="1.5"
-                            stroke="currentColor"
-                            className="size-4 mr-2"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
-                            />
-                        </svg>
-                        Update
-                    </button>
-                )}
             </div>
             {isModalOpen && (
                 <>
@@ -235,9 +224,32 @@ export function AddLinkWidget(props: AddLinkWidgetProps) {
                                         </svg>
                                     </button>
                                 )}
+                                {modifiedLinks[lin.id] && (
+                                    <button
+                                        type="submit"
+                                        form={`linkForm-${lin.id}`}
+                                        className={`ml-2 ${styles.button}`}
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke-width="1.5"
+                                            stroke="currentColor"
+                                            className="size-4 mr-2"
+                                        >
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+                                            />
+                                        </svg>
+                                        Update
+                                    </button>
+                                )}
                             </div>
                             <form
-                                id="linkForm"
+                                id={`linkForm-${lin.id}`}
                                 onSubmit={(event) =>
                                     submitUpdate(event, lin.id)
                                 }
@@ -263,7 +275,9 @@ export function AddLinkWidget(props: AddLinkWidgetProps) {
                                                     )
                                                 }
                                             }}
-                                            onChange={() => setIsModified(true)}
+                                            onChange={() =>
+                                                handleLinkModification(lin.id)
+                                            }
                                             maxLength={350}
                                             required
                                         />
@@ -280,7 +294,9 @@ export function AddLinkWidget(props: AddLinkWidgetProps) {
                                             name="linkDescription"
                                             defaultValue={lin.description}
                                             readOnly={!props.isEditing}
-                                            onChange={() => setIsModified(true)}
+                                            onChange={() =>
+                                                handleLinkModification(lin.id)
+                                            }
                                             maxLength={100}
                                         />
                                     </label>

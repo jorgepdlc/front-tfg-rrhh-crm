@@ -21,7 +21,16 @@ export function AddTaskWidget(props: AddTaskWidgetProps) {
         size: 10,
     })
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const [isModified, setIsModified] = useState(false)
+    const [modifiedTasks, setModifiedTasks] = useState<{
+        [key: TasksId]: boolean
+    }>({})
+
+    const handleTaskModification = (taskId: TasksId) => {
+        setModifiedTasks((prev) => ({
+            ...prev,
+            [taskId]: true,
+        }))
+    }
 
     const handleOpenModal = () => {
         setIsModalOpen(true)
@@ -82,7 +91,8 @@ export function AddTaskWidget(props: AddTaskWidgetProps) {
 
     const submitUpdate = async (
         event: React.FormEvent<HTMLFormElement>,
-        taskId: TasksId
+        taskId: TasksId,
+        experienceId: ExperienceId
     ) => {
         event.preventDefault()
 
@@ -104,12 +114,15 @@ export function AddTaskWidget(props: AddTaskWidgetProps) {
             },
             resourceId: taskId,
             candidateId: props.candidateId,
-            experienceId: props.experienceId,
+            experienceId: experienceId,
         })
 
         if (success) {
             await refetch()
-            setIsModified(false)
+            setModifiedTasks((prev) => ({
+                ...prev,
+                [taskId]: false,
+            }))
         } else {
             alert('Failed to update task')
         }
@@ -137,29 +150,6 @@ export function AddTaskWidget(props: AddTaskWidgetProps) {
                             Add
                         </button>
                     )}
-                {isModified && (
-                    <button
-                        type="submit"
-                        form="tasksForm"
-                        className={`ml-2 ${styles.button}`}
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke-width="1.5"
-                            stroke="currentColor"
-                            className="size-4 mr-2"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
-                            />
-                        </svg>
-                        Update
-                    </button>
-                )}
             </div>
             {isModalOpen && (
                 <>
@@ -238,39 +228,67 @@ export function AddTaskWidget(props: AddTaskWidgetProps) {
                                             xmlns="http://www.w3.org/2000/svg"
                                             fill="none"
                                             viewBox="0 0 24 24"
-                                            stroke-width="1.5"
+                                            strokeWidth="1.5"
                                             stroke="currentColor"
                                             className="size-4"
                                         >
                                             <path
-                                                stroke-linecap="round"
-                                                stroke-linejoin="round"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
                                                 d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                                            />
+                                        </svg>
+                                    </button>
+                                )}
+                                {modifiedTasks[task.id] && (
+                                    <button
+                                        type="submit"
+                                        form={`taskForm-${task.id}`}
+                                        className={`ml-2 ${styles.button}`}
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            strokeWidth="1.5"
+                                            stroke="currentColor"
+                                            className="size-4"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
                                             />
                                         </svg>
                                     </button>
                                 )}
                             </div>
                             <form
-                                id="tasksForm"
+                                id={`taskForm-${task.id}`}
                                 onSubmit={(event) =>
-                                    submitUpdate(event, task.id)
+                                    submitUpdate(
+                                        event,
+                                        task.id,
+                                        props.experienceId
+                                    )
                                 }
                             >
                                 <div className={styles.card}>
                                     <label>
                                         Name: *
                                         <input
-                                            className={`${
+                                            className={
                                                 props.isEditing
                                                     ? styles.activeInput
                                                     : styles.input
-                                            }`}
+                                            }
                                             type="text"
                                             name="taskName"
                                             defaultValue={task.name}
                                             readOnly={!props.isEditing}
-                                            onChange={() => setIsModified(true)}
+                                            onChange={() =>
+                                                handleTaskModification(task.id)
+                                            }
                                             maxLength={100}
                                             required
                                         />
@@ -278,15 +296,17 @@ export function AddTaskWidget(props: AddTaskWidgetProps) {
                                     <label className="lg:col-span-2">
                                         Description:
                                         <Textarea
-                                            className={`${
+                                            className={
                                                 props.isEditing
                                                     ? styles.activeInput
                                                     : styles.input
-                                            }`}
+                                            }
                                             name="taskDescription"
                                             defaultValue={task.description}
                                             readOnly={!props.isEditing}
-                                            onChange={() => setIsModified(true)}
+                                            onChange={() =>
+                                                handleTaskModification(task.id)
+                                            }
                                             maxLength={500}
                                         />
                                     </label>

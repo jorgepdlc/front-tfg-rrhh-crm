@@ -22,7 +22,16 @@ export function AddExperienceWidget(props: AddExperienceWidgetProps) {
         size: 10,
     })
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const [isModified, setIsModified] = useState(false)
+    const [modifiedExperiences, setModifiedExperiences] = useState<{
+        [key: ExperienceId]: boolean
+    }>({})
+
+    const handleExperienceModification = (experienceId: ExperienceId) => {
+        setModifiedExperiences((prev) => ({
+            ...prev,
+            [experienceId]: true,
+        }))
+    }
 
     const handleOpenModal = () => {
         setIsModalOpen(true)
@@ -132,7 +141,10 @@ export function AddExperienceWidget(props: AddExperienceWidgetProps) {
 
         if (success) {
             await refetch()
-            setIsModified(false)
+            setModifiedExperiences((prev) => ({
+                ...prev,
+                [experienceId]: false,
+            }))
         } else {
             alert('Failed to update experience')
         }
@@ -160,29 +172,6 @@ export function AddExperienceWidget(props: AddExperienceWidgetProps) {
                             Add
                         </button>
                     )}
-                {isModified && (
-                    <button
-                        type="submit"
-                        form="experienceForm"
-                        className={`ml-2 ${styles.button}`}
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke-width="1.5"
-                            stroke="currentColor"
-                            className="size-4 mr-2"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
-                            />
-                        </svg>
-                        Update
-                    </button>
-                )}
             </div>
             {isModalOpen && (
                 <>
@@ -295,9 +284,32 @@ export function AddExperienceWidget(props: AddExperienceWidgetProps) {
                                         </svg>
                                     </button>
                                 )}
+                                {modifiedExperiences[exp.id] && (
+                                    <button
+                                        type="submit"
+                                        form={`experienceForm-${exp.id}`}
+                                        className={`ml-2 ${styles.button}`}
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke-width="1.5"
+                                            stroke="currentColor"
+                                            className="size-4 mr-2"
+                                        >
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+                                            />
+                                        </svg>
+                                        Update
+                                    </button>
+                                )}
                             </div>
                             <form
-                                id="experienceForm"
+                                id={`experienceForm-${exp.id}`}
                                 onSubmit={(event) =>
                                     submitUpdate(event, exp.id)
                                 }
@@ -315,7 +327,11 @@ export function AddExperienceWidget(props: AddExperienceWidgetProps) {
                                             name="expPosition"
                                             defaultValue={exp.position}
                                             readOnly={!props.isEditing}
-                                            onChange={() => setIsModified(true)}
+                                            onChange={() =>
+                                                handleExperienceModification(
+                                                    exp.id
+                                                )
+                                            }
                                             maxLength={100}
                                             required
                                         />
@@ -332,7 +348,11 @@ export function AddExperienceWidget(props: AddExperienceWidgetProps) {
                                             name="expCompany"
                                             defaultValue={exp.company}
                                             readOnly={!props.isEditing}
-                                            onChange={() => setIsModified(true)}
+                                            onChange={() =>
+                                                handleExperienceModification(
+                                                    exp.id
+                                                )
+                                            }
                                             maxLength={100}
                                             required
                                         />
@@ -352,7 +372,11 @@ export function AddExperienceWidget(props: AddExperienceWidgetProps) {
                                                 10
                                             )}
                                             readOnly={!props.isEditing}
-                                            onChange={() => setIsModified(true)}
+                                            onChange={() =>
+                                                handleExperienceModification(
+                                                    exp.id
+                                                )
+                                            }
                                             required
                                         />
                                     </label>
@@ -375,7 +399,11 @@ export function AddExperienceWidget(props: AddExperienceWidgetProps) {
                                                     : ''
                                             }
                                             readOnly={!props.isEditing}
-                                            onChange={() => setIsModified(true)}
+                                            onChange={() =>
+                                                handleExperienceModification(
+                                                    exp.id
+                                                )
+                                            }
                                         />
                                     </label>
                                     {!props.isEditing && (
