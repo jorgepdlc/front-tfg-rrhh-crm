@@ -96,6 +96,7 @@ export function AddParticipantWidget(props: AddParticipantWidgetProps) {
         if (success) {
             try {
                 await refetchEvent()
+                await refetch()
             } catch (refetchError) {
                 console.error('Error refetching data:', refetchError)
             }
