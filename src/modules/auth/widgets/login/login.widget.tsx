@@ -1,5 +1,5 @@
 import React from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import { AuthForm } from '../../components/auth-form'
 import styles from './login.module.css'
@@ -7,7 +7,6 @@ import styles from './login.module.css'
 export type LoginWidgetProps = {}
 
 export function LoginWidget(props: LoginWidgetProps) {
-    const router = useRouter()
     const searchParams = useSearchParams()
     const callbackUrl = searchParams.get('callbackUrl') || '/profile'
     return (
@@ -26,7 +25,7 @@ export function LoginWidget(props: LoginWidgetProps) {
                         return 'Invalid credentials'
                     }
 
-                    router.replace(callbackUrl)
+                    window.location.href = callbackUrl
                 }}
             />
         </div>
