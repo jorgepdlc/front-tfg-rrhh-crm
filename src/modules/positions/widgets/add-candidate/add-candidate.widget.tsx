@@ -61,7 +61,7 @@ export function AddCandidateWidget(props: AddCandidateWidgetProps) {
                 candidate.name
                     .toLowerCase()
                     .includes(searchTerm.toLowerCase()) ||
-                candidate.email
+                candidate.role
                     .toLowerCase()
                     .includes(searchTerm.toLowerCase()) ||
                 candidate.lastname

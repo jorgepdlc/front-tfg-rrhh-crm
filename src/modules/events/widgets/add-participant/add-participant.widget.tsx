@@ -57,7 +57,7 @@ export function AddParticipantWidget(props: AddParticipantWidgetProps) {
                 candidate.name
                     .toLowerCase()
                     .includes(searchTerm.toLowerCase()) ||
-                candidate.email
+                candidate.role
                     .toLowerCase()
                     .includes(searchTerm.toLowerCase()) ||
                 candidate.lastname
@@ -166,7 +166,7 @@ export function AddParticipantWidget(props: AddParticipantWidgetProps) {
                                                     scope="col"
                                                     className="py-2"
                                                 >
-                                                    Email
+                                                    Role
                                                 </th>
                                             </tr>
                                         </thead>
@@ -185,7 +185,7 @@ export function AddParticipantWidget(props: AddParticipantWidgetProps) {
                                                         {c.name} {c.lastname}
                                                     </th>
                                                     <td className="text-sm">
-                                                        {c.email}
+                                                        {c.role}
                                                     </td>
                                                 </tr>
                                             </tbody>
