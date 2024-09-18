@@ -35,12 +35,12 @@ export function PositionTableWidget(props: PositionTableWidgetProps) {
     const [employmentTypeFilters, setEmploymentTypeFilters] = useState<{
         full_time: boolean
         part_time: boolean
-        contract: boolean
+        contractor: boolean
         temporary: boolean
     }>({
         full_time: false,
         part_time: false,
-        contract: false,
+        contractor: false,
         temporary: false,
     })
     const [locationFilters, setLocationFilters] = useState<{
@@ -79,7 +79,7 @@ export function PositionTableWidget(props: PositionTableWidgetProps) {
     }
 
     const handleTypeChange = (
-        type: 'full_time' | 'part_time' | 'contract' | 'temporary'
+        type: 'full_time' | 'part_time' | 'contractor' | 'temporary'
     ) => {
         setEmploymentTypeFilters((prevFilters) => ({
             ...prevFilters,
@@ -127,14 +127,14 @@ export function PositionTableWidget(props: PositionTableWidgetProps) {
     }
 
     const matchesTypeFilters = (position: Position) => {
-        const { full_time, part_time, contract, temporary } =
+        const { full_time, part_time, contractor, temporary } =
             employmentTypeFilters
 
         return (
-            (!full_time && !part_time && !contract && !temporary) ||
+            (!full_time && !part_time && !contractor && !temporary) ||
             (full_time && position.employmentType === 'FULL_TIME') ||
             (part_time && position.employmentType === 'PART_TIME') ||
-            (contract && position.employmentType === 'CONTRACTOR') ||
+            (contractor && position.employmentType === 'CONTRACTOR') ||
             (temporary && position.employmentType === 'TEMPORARY')
         )
     }
@@ -278,7 +278,7 @@ export function PositionTableWidget(props: PositionTableWidgetProps) {
                             className={`mr-2 ${
                                 employmentTypeFilters.full_time ||
                                 employmentTypeFilters.part_time ||
-                                employmentTypeFilters.contract ||
+                                employmentTypeFilters.contractor ||
                                 employmentTypeFilters.temporary
                                     ? styles.active
                                     : ''
@@ -337,11 +337,13 @@ export function PositionTableWidget(props: PositionTableWidgetProps) {
                                 <button
                                     type="button"
                                     className={`${styles.filterOption} ${
-                                        employmentTypeFilters.contract
+                                        employmentTypeFilters.contractor
                                             ? styles.active
                                             : ''
                                     }`}
-                                    onClick={() => handleTypeChange('contract')}
+                                    onClick={() =>
+                                        handleTypeChange('contractor')
+                                    }
                                 >
                                     Contractor
                                 </button>
